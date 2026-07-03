@@ -1,611 +1,397 @@
-/**
- * SMM Service - Admin Panel JavaScript
- */
+// Admin Panel JavaScript - Cards UI and Website Logs
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize admin panel
+    initTabs();
+    initServices();
+    initSettings();
+    initLogs();
+    initCredentials();
+    showToast('Admin panel loaded successfully', 'success');
+});
 
-class AdminPanel {
-    constructor() {
-        this.apiBase = '/api';
-        this.isLoggedIn = false;
-        this.currentTab = 'dashboard';
-        this.services = [];
-        this.orders = [];
-        this.settings = {};
-        this.admin = {};
-        this.init();
-    }
+// Tab Navigation
+function initTabs() {
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
 
-    async init() {
-        this.checkLoginStatus();
-        this.setupEventListeners();
-        this.setupSidebar();
-    }
-
-    checkLoginStatus() {
-        const token = localStorage.getItem('adminToken');
-        const expiry = localStorage.getItem('tokenExpiry');
-        
-        if (token && expiry && Date.now() < parseInt(expiry)) {
-            this.isLoggedIn = true;
-            this.loadDashboardData();
-        } else {
-            this.showLoginOverlay();
-        }
-    }
-
-    showLoginOverlay() {
-        const overlay = document.getElementById('login-overlay');
-        if (overlay) overlay.classList.remove('hidden');
-    }
-
-    hideLoginOverlay() {
-        const overlay = document.getElementById('login-overlay');
-        if (overlay) overlay.classList.add('hidden');
-    }
-
-    async login(username, password) {
-        try {
-            const response = await fetch(`${this.apiBase}/admin`);
-            const data = await response.json();
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const target = tab.getAttribute('data-tab');
             
-            if (data.username === username) {
-                // Simple password check (in production, use proper hashing)
-                if (data.password === password || this.hashPassword(password) === data.password) {
-                    this.isLoggedIn = true;
-                    const token = this.generateToken();
-                    localStorage.setItem('adminToken', token);
-                    localStorage.setItem('tokenExpiry', (Date.now() + 24 * 60 * 60 * 1000).toString());
-                    this.hideLoginOverlay();
-                    this.loadDashboardData();
-                    this.showNotification('Login successful!', 'success');
-                } else {
-                    this.showNotification('Invalid password', 'error');
-                }
-            } else {
-                this.showNotification('Invalid credentials', 'error');
-            }
-        } catch (error) {
-            // Allow demo access if API is not available
-            if (username === 'admin' && password === 'admin123') {
-                this.isLoggedIn = true;
-                const token = this.generateToken();
-                localStorage.setItem('adminToken', token);
-                localStorage.setItem('tokenExpiry', (Date.now() + 24 * 60 * 60 * 1000).toString());
-                this.hideLoginOverlay();
-                this.loadDashboardData();
-                this.showNotification('Demo login successful!', 'success');
-            } else {
-                this.showNotification('Login failed. Please try again.', 'error');
-            }
-        }
-    }
-
-    logout() {
-        localStorage.removeItem('adminToken');
-        localStorage.removeItem('tokenExpiry');
-        this.isLoggedIn = false;
-        this.services = [];
-        this.orders = [];
-        this.showLoginOverlay();
-    }
-
-    generateToken() {
-        return 'admin_' + Math.random().toString(36).substr(2, 9) + Date.now();
-    }
-
-    hashPassword(password) {
-        // Simple hash for demo (use bcrypt in production)
-        let hash = 0;
-        for (let i = 0; i < password.length; i++) {
-            hash = ((hash << 5) - hash) + password.charCodeAt(i);
-            hash |= 0;
-        }
-        return hash.toString();
-    }
-
-    async loadDashboardData() {
-        await Promise.all([
-            this.loadSettings(),
-            this.loadServices(),
-            this.loadOrders(),
-            this.loadAdminInfo()
-        ]);
-        this.updateDashboard();
-    }
-
-    async loadSettings() {
-        try {
-            const response = await fetch(`${this.apiBase}/settings`);
-            this.settings = await response.json();
-            this.populateSettingsForm();
-        } catch (error) {
-            console.log('Using default settings');
-            this.settings = {
-                site_title: 'SMM Service',
-                subtitle: 'Your Trusted Social Media Marketing Partner',
-                telegram_link: 'https://t.me/yourtelegram',
-                contact_email: 'support@example.com',
-                working_hours: '24/7 Available'
-            };
-            this.populateSettingsForm();
-        }
-    }
-
-    async loadServices() {
-        try {
-            const response = await fetch(`${this.apiBase}/services`);
-            this.services = await response.json();
-            this.renderServices();
-        } catch (error) {
-            this.services = [
-                { id: 1, name: 'Instagram Followers', icon: 'instagram', price: 9.99, description: 'High-quality followers', features: 'Real profiles,Fast delivery,24/7 support', badge: 'Popular', color: '#E4405F' },
-                { id: 2, name: 'TikTok Views', icon: 'play-circle', price: 4.99, description: 'Boost views', features: 'Instant start,High retention', badge: '', color: '#00F2EA' },
-                { id: 3, name: 'YouTube Subscribers', icon: 'youtube', price: 19.99, description: 'Grow channel', features: 'Real users,Money-back guarantee', badge: 'Best', color: '#FF0000' }
-            ];
-            this.renderServices();
-        }
-    }
-
-    async loadOrders() {
-        try {
-            const response = await fetch(`${this.apiBase}/orders`);
-            this.orders = await response.json();
-            this.renderOrders();
-        } catch (error) {
-            this.orders = [
-                { id: 'ORD001', service: 'Instagram Followers', customer: 'John Doe', amount: 29.99, status: 'completed', date: '2024-01-15' },
-                { id: 'ORD002', service: 'TikTok Views', customer: 'Jane Smith', amount: 14.99, status: 'pending', date: '2024-01-15' },
-                { id: 'ORD003', service: 'YouTube Subscribers', customer: 'Bob Wilson', amount: 59.99, status: 'processing', date: '2024-01-14' }
-            ];
-            this.renderOrders();
-        }
-    }
-
-    async loadAdminInfo() {
-        try {
-            const response = await fetch(`${this.apiBase}/admin`);
-            this.admin = await response.json();
-        } catch (error) {
-            this.admin = { username: 'admin', password: '' };
-        }
-    }
-
-    updateDashboard() {
-        // Update stats
-        const totalOrders = this.orders.length;
-        const totalRevenue = this.orders.reduce((sum, o) => sum + o.amount, 0);
-        const pendingOrders = this.orders.filter(o => o.status === 'pending').length;
-        const activeServices = this.services.length;
-
-        document.querySelectorAll('.stat-card').forEach(card => {
-            const label = card.querySelector('.stat-info h3')?.textContent.toLowerCase();
-            const valueEl = card.querySelector('.stat-info .value');
+            tabs.forEach(t => t.classList.remove('active'));
+            tabContents.forEach(tc => tc.classList.remove('active'));
             
-            if (label?.includes('orders')) valueEl.textContent = totalOrders;
-            if (label?.includes('revenue')) valueEl.textContent = '$' + totalRevenue.toFixed(2);
-            if (label?.includes('pending')) valueEl.textContent = pendingOrders;
-            if (label?.includes('services')) valueEl.textContent = activeServices;
+            tab.classList.add('active');
+            document.getElementById(target).classList.add('active');
         });
+    });
+}
 
-        // Update charts
-        this.updateCharts();
-    }
+// Services Management
+let services = [];
 
-    updateCharts() {
-        const ctx = document.getElementById('orders-chart');
-        if (ctx && window.Chart) {
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [{
-                        label: 'Orders',
-                        data: [12, 19, 8, 15, 25, 20, 30],
-                        borderColor: '#6366f1',
-                        tension: 0.4,
-                        fill: true,
-                        backgroundColor: 'rgba(99, 102, 241, 0.1)'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: { 
-                            beginAtZero: true,
-                            grid: { color: 'rgba(255,255,255,0.1)' },
-                            ticks: { color: '#94a3b8' }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: '#94a3b8' }
-                        }
-                    }
-                }
-            });
-        }
-    }
-
-    populateSettingsForm() {
-        const form = document.getElementById('settings-form');
-        if (!form) return;
-
-        Object.keys(this.settings).forEach(key => {
-            const input = form.querySelector(`[name="${key}"]`);
-            if (input) input.value = this.settings[key];
-        });
-    }
-
-    renderServices() {
-        const container = document.getElementById('services-list');
-        if (!container) return;
-
-        if (this.services.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <i class="bi bi-box"></i>
-                    <h3>No Services Yet</h3>
-                    <p>Add your first service to get started</p>
-                </div>
-            `;
-            return;
-        }
-
-        container.innerHTML = this.services.map(service => `
-            <div class="service-item" data-id="${service.id}">
-                <div class="service-item-header">
-                    <div class="service-item-icon" style="background: linear-gradient(135deg, ${service.color || '#6366f1'}, ${service.color || '#6366f1'}dd)">
-                        <i class="bi bi-${service.icon || 'star'}"></i>
-                    </div>
-                    <div class="service-item-info">
-                        <h4>${service.name}</h4>
-                        <span class="price">$${service.price}</span>
-                        ${service.badge ? `<span class="badge badge-info">${service.badge}</span>` : ''}
-                    </div>
-                </div>
-                <p class="service-item-desc">${service.description || ''}</p>
-                <div class="service-item-features">
-                    ${(service.features || '').split(',').map(f => `<span class="feature-tag">${f.trim()}</span>`).join('')}
-                </div>
-                <div class="service-item-actions">
-                    <button class="btn btn-secondary" onclick="admin.editService(${service.id})">
-                        <i class="bi bi-pencil"></i> Edit
-                    </button>
-                    <button class="btn btn-danger" onclick="admin.deleteService(${service.id})">
-                        <i class="bi bi-trash"></i> Delete
-                    </button>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    renderOrders() {
-        const tbody = document.querySelector('#orders-table tbody');
-        if (!tbody) return;
-
-        if (this.orders.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="6" class="text-center">No orders yet</td>
-                </tr>
-            `;
-            return;
-        }
-
-        tbody.innerHTML = this.orders.map(order => `
-            <tr>
-                <td><strong>${order.id}</strong></td>
-                <td>${order.service}</td>
-                <td>${order.customer || 'N/A'}</td>
-                <td>$${order.amount}</td>
-                <td><span class="badge badge-${this.getStatusBadge(order.status)}">${order.status}</span></td>
-                <td>${order.date || 'N/A'}</td>
-            </tr>
-        `).join('');
-    }
-
-    getStatusBadge(status) {
-        const badges = {
-            completed: 'success',
-            pending: 'warning',
-            processing: 'info',
-            cancelled: 'danger'
-        };
-        return badges[status] || 'info';
-    }
-
-    // Service Management
-    openServiceModal(serviceId = null) {
-        const modal = document.getElementById('service-modal');
-        const form = document.getElementById('service-form');
-        const title = document.getElementById('modal-title');
-        
-        if (!modal || !form) return;
-
-        form.reset();
-        
-        if (serviceId) {
-            const service = this.services.find(s => s.id === serviceId);
-            if (service) {
-                title.textContent = 'Edit Service';
-                form.elements['name'].value = service.name;
-                form.elements['icon'].value = service.icon || '';
-                form.elements['price'].value = service.price;
-                form.elements['description'].value = service.description || '';
-                form.elements['features'].value = service.features || '';
-                form.elements['badge'].value = service.badge || '';
-                form.elements['color'].value = service.color || '#6366f1';
-                form.dataset.serviceId = serviceId;
-            }
-        } else {
-            title.textContent = 'Add New Service';
-            delete form.dataset.serviceId;
-        }
-
-        modal.classList.add('active');
-    }
-
-    closeServiceModal() {
-        const modal = document.getElementById('service-modal');
-        if (modal) modal.classList.remove('active');
-    }
-
-    async saveService(formData) {
-        const serviceId = formData.dataset.serviceId;
-        const service = {
-            name: formData.elements['name'].value,
-            icon: formData.elements['icon'].value || 'star',
-            price: parseFloat(formData.elements['price'].value),
-            description: formData.elements['description'].value,
-            features: formData.elements['features'].value,
-            badge: formData.elements['badge'].value,
-            color: formData.elements['color'].value || '#6366f1'
-        };
-
-        try {
-            const method = serviceId ? 'POST' : 'POST';
-            const url = serviceId ? `${this.apiBase}/services/${serviceId}` : `${this.apiBase}/services`;
-            
-            // For demo, update locally
-            if (serviceId) {
-                const index = this.services.findIndex(s => s.id === parseInt(serviceId));
-                if (index !== -1) {
-                    this.services[index] = { ...this.services[index], ...service };
-                }
-            } else {
-                service.id = Date.now();
-                this.services.push(service);
-            }
-
-            this.renderServices();
-            this.closeServiceModal();
-            this.showNotification('Service saved successfully!', 'success');
-        } catch (error) {
-            this.showNotification('Failed to save service', 'error');
-        }
-    }
-
-    editService(id) {
-        this.openServiceModal(id);
-    }
-
-    async deleteService(id) {
-        if (!confirm('Are you sure you want to delete this service?')) return;
-
-        try {
-            this.services = this.services.filter(s => s.id !== id);
-            this.renderServices();
-            this.showNotification('Service deleted successfully!', 'success');
-        } catch (error) {
-            this.showNotification('Failed to delete service', 'error');
-        }
-    }
-
-    // Settings Management
-    async saveSettings(formData) {
-        const newSettings = {
-            site_title: formData.elements['site_title'].value,
-            subtitle: formData.elements['subtitle'].value,
-            telegram_link: formData.elements['telegram_link'].value,
-            contact_email: formData.elements['contact_email'].value,
-            working_hours: formData.elements['working_hours'].value
-        };
-
-        try {
-            // In production, save to API
-            this.settings = { ...this.settings, ...newSettings };
-            this.showNotification('Settings saved successfully!', 'success');
-        } catch (error) {
-            this.showNotification('Failed to save settings', 'error');
-        }
-    }
-
-    // Admin Credentials
-    async updateAdminCredentials(currentPassword, newPassword) {
-        if (!currentPassword || !newPassword) {
-            this.showNotification('Please fill all fields', 'error');
-            return;
-        }
-
-        if (newPassword.length < 6) {
-            this.showNotification('Password must be at least 6 characters', 'error');
-            return;
-        }
-
-        try {
-            this.showNotification('Admin credentials updated!', 'success');
-            document.getElementById('admin-form').reset();
-        } catch (error) {
-            this.showNotification('Failed to update credentials', 'error');
-        }
-    }
-
-    // Event Listeners
-    setupEventListeners() {
-        // Login form
-        const loginForm = document.getElementById('login-form');
-        if (loginForm) {
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const username = loginForm.elements['username'].value;
-                const password = loginForm.elements['password'].value;
-                this.login(username, password);
-            });
-        }
-
-        // Service form
-        const serviceForm = document.getElementById('service-form');
-        if (serviceForm) {
-            serviceForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.saveService(serviceForm);
-            });
-        }
-
-        // Settings form
-        const settingsForm = document.getElementById('settings-form');
-        if (settingsForm) {
-            settingsForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.saveSettings(settingsForm);
-            });
-        }
-
-        // Admin form
-        const adminForm = document.getElementById('admin-form');
-        if (adminForm) {
-            adminForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.updateAdminCredentials(
-                    adminForm.elements['current_password'].value,
-                    adminForm.elements['new_password'].value
-                );
-            });
-        }
-
-        // Tab navigation
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const tab = item.dataset.tab;
-                if (tab) this.switchTab(tab);
-            });
-        });
-
-        // Logout
-        const logoutBtn = document.getElementById('logout-btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', () => this.logout());
-        }
-
-        // Modal close
-        document.querySelectorAll('.modal-close, .modal-overlay').forEach(el => {
-            el.addEventListener('click', (e) => {
-                if (e.target === el) {
-                    el.closest('.modal-overlay')?.classList.remove('active');
-                }
-            });
-        });
-
-        // Order filters
-        const statusFilter = document.getElementById('status-filter');
-        if (statusFilter) {
-            statusFilter.addEventListener('change', () => this.filterOrders());
-        }
-    }
-
-    setupSidebar() {
-        const sidebar = document.querySelector('.sidebar');
-        const toggle = document.querySelector('.sidebar-toggle');
-        
-        if (toggle) {
-            toggle.addEventListener('click', () => {
-                sidebar?.classList.toggle('collapsed');
-            });
-        }
-
-        // Mobile menu
-        const mobileToggle = document.querySelector('.mobile-menu-toggle');
-        if (mobileToggle) {
-            mobileToggle.addEventListener('click', () => {
-                sidebar?.classList.toggle('open');
-            });
-        }
-    }
-
-    switchTab(tabId) {
-        // Update nav items
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.classList.toggle('active', item.dataset.tab === tabId);
-        });
-
-        // Update tab content
-        document.querySelectorAll('.tab-content').forEach(content => {
-            content.style.display = content.id === `${tabId}-tab` ? 'block' : 'none';
-        });
-
-        this.currentTab = tabId;
-    }
-
-    filterOrders() {
-        const status = document.getElementById('status-filter')?.value;
-        const filtered = status ? this.orders.filter(o => o.status === status) : this.orders;
-        
-        const tbody = document.querySelector('#orders-table tbody');
-        if (tbody) {
-            tbody.innerHTML = filtered.map(order => `
-                <tr>
-                    <td><strong>${order.id}</strong></td>
-                    <td>${order.service}</td>
-                    <td>${order.customer || 'N/A'}</td>
-                    <td>$${order.amount}</td>
-                    <td><span class="badge badge-${this.getStatusBadge(order.status)}">${order.status}</span></td>
-                    <td>${order.date || 'N/A'}</td>
-                </tr>
-            `).join('');
-        }
-    }
-
-    showNotification(message, type = 'success') {
-        const notification = document.getElementById('notification');
-        if (!notification) return;
-
-        notification.querySelector('.notification-message').textContent = message;
-        notification.className = `notification ${type} show`;
-
-        setTimeout(() => {
-            notification.classList.remove('show');
-        }, 3000);
-    }
-
-    // Icon Selector
-    selectIcon(iconName) {
-        const input = document.querySelector('[name="icon"]');
-        if (input) input.value = iconName;
-        
-        document.querySelectorAll('.icon-option').forEach(opt => {
-            opt.classList.toggle('selected', opt.dataset.icon === iconName);
-        });
-    }
-
-    // Color Picker Sync
-    syncColorPicker(colorInput, textInput) {
-        if (colorInput && textInput) {
-            colorInput.addEventListener('input', () => {
-                textInput.value = colorInput.value;
-            });
-            textInput.addEventListener('input', () => {
-                if (/^#[0-9A-Fa-f]{6}$/.test(textInput.value)) {
-                    colorInput.value = textInput.value;
-                }
-            });
-        }
+async function initServices() {
+    try {
+        const response = await fetch('/api/services');
+        services = await response.json();
+        renderServices();
+    } catch (error) {
+        services = [
+            { id: 1, name: 'Instagram Followers', price: 9.99, description: 'High quality followers', icon: '📸' },
+            { id: 2, name: 'TikTok Views', price: 4.99, description: 'Real views', icon: '🎵' },
+            { id: 3, name: 'YouTube Subscribers', price: 14.99, description: 'Active subscribers', icon: '▶️' }
+        ];
+        renderServices();
     }
 }
 
-// Initialize Admin Panel
-let admin;
+function renderServices() {
+    const container = document.getElementById('servicesList');
+    if (!container) return;
+
+    if (services.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">📦</div>
+                <h3>No Services Yet</h3>
+                <p>Add your first service to get started</p>
+                <button class="btn btn-primary" onclick="openServiceModal()">
+                    <span>+</span> Add Service
+                </button>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = services.map(service => `
+        <div class="card" data-id="${service.id}">
+            <div class="card-header">
+                <h3 class="card-title">${service.icon} ${service.name}</h3>
+                <span class="badge badge-primary">$${service.price}</span>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">${service.description}</p>
+            <div class="actions">
+                <button class="action-btn" onclick="editService(${service.id})" title="Edit">
+                    ✏️
+                </button>
+                <button class="action-btn delete" onclick="deleteService(${service.id})" title="Delete">
+                    🗑️
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function openServiceModal(service = null) {
+    const modal = document.getElementById('serviceModal');
+    const form = document.getElementById('serviceForm');
+    const title = document.getElementById('modalTitle');
+
+    if (service) {
+        title.textContent = 'Edit Service';
+        form.name.value = service.name;
+        form.price.value = service.price;
+        form.description.value = service.description;
+        form.icon.value = service.icon;
+        form.dataset.id = service.id;
+    } else {
+        title.textContent = 'Add New Service';
+        form.reset();
+        delete form.dataset.id;
+    }
+
+    modal.classList.add('active');
+}
+
+function closeServiceModal() {
+    document.getElementById('serviceModal').classList.remove('active');
+}
+
+async function saveService(formData) {
+    const id = formData.dataset.id;
+    const service = {
+        name: formData.name.value,
+        price: parseFloat(formData.price.value),
+        description: formData.description.value,
+        icon: formData.icon.value
+    };
+
+    if (id) {
+        // Update existing
+        const index = services.findIndex(s => s.id == id);
+        if (index !== -1) {
+            services[index] = { ...services[index], ...service };
+        }
+        showToast('Service updated successfully', 'success');
+    } else {
+        // Add new
+        service.id = Date.now();
+        services.push(service);
+        showToast('Service added successfully', 'success');
+    }
+
+    renderServices();
+    closeServiceModal();
+    
+    // Save to server
+    try {
+        await fetch('/api/services', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(services)
+        });
+    } catch (e) {
+        // Silent fail - already updated locally
+    }
+}
+
+function editService(id) {
+    const service = services.find(s => s.id == id);
+    if (service) openServiceModal(service);
+}
+
+async function deleteService(id) {
+    if (!confirm('Are you sure you want to delete this service?')) return;
+    
+    services = services.filter(s => s.id !== id);
+    renderServices();
+    showToast('Service deleted successfully', 'success');
+    
+    try {
+        await fetch('/api/services', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(services)
+        });
+    } catch (e) {}
+}
+
+// Settings Management
+function initSettings() {
+    const settingsForm = document.getElementById('settingsForm');
+    if (settingsForm) {
+        settingsForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(settingsForm);
+            const settings = Object.fromEntries(formData);
+            
+            try {
+                await fetch('/api/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(settings)
+                });
+                showToast('Settings saved successfully', 'success');
+            } catch (error) {
+                showToast('Failed to save settings', 'error');
+            }
+        });
+    }
+}
+
+// Website Logs
+let logs = [];
+let filteredLogs = [];
+
+async function initLogs() {
+    try {
+        const response = await fetch('/api/logs');
+        logs = await response.json();
+        filteredLogs = [...logs];
+        renderLogs();
+        updateLogStats();
+    } catch (error) {
+        // Demo logs
+        logs = [
+            { id: 1, page: '/', timestamp: new Date().toISOString(), referrer: 'direct', user_agent: 'Chrome/Windows' },
+            { id: 2, page: '/about', timestamp: new Date(Date.now() - 3600000).toISOString(), referrer: 'google.com', user_agent: 'Safari/Mac' },
+            { id: 3, page: '/services', timestamp: new Date(Date.now() - 7200000).toISOString(), referrer: 'twitter.com', user_agent: 'Firefox/Linux' }
+        ];
+        filteredLogs = [...logs];
+        renderLogs();
+        updateLogStats();
+    }
+}
+
+function updateLogStats() {
+    const totalVisits = logs.length;
+    const todayVisits = logs.filter(l => {
+        const logDate = new Date(l.timestamp).toDateString();
+        const today = new Date().toDateString();
+        return logDate === today;
+    }).length;
+    
+    const uniquePages = [...new Set(logs.map(l => l.page))].length;
+
+    document.getElementById('totalVisits')?.setAttribute('data-count', totalVisits);
+    document.getElementById('todayVisits')?.setAttribute('data-count', todayVisits);
+    document.getElementById('uniquePages')?.setAttribute('data-count', uniquePages);
+}
+
+function renderLogs() {
+    const container = document.getElementById('logsList');
+    if (!container) return;
+
+    if (filteredLogs.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">📊</div>
+                <h3>No Logs Yet</h3>
+                <p>Website visit logs will appear here</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = filteredLogs.map(log => {
+        const date = new Date(log.timestamp);
+        const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        
+        return `
+            <div class="log-entry">
+                <div class="log-header">
+                    <span class="log-page">${log.page}</span>
+                    <span class="log-time">${formattedDate}</span>
+                </div>
+                <div class="log-details">
+                    <span>📍 ${log.referrer || 'Direct'}</span>
+                    <span>🌐 ${log.user_agent || 'Unknown'}</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function filterLogs() {
+    const searchTerm = document.getElementById('logSearch')?.value.toLowerCase() || '';
+    const pageFilter = document.getElementById('pageFilter')?.value || '';
+
+    filteredLogs = logs.filter(log => {
+        const matchesSearch = log.page.toLowerCase().includes(searchTerm) ||
+                            (log.referrer && log.referrer.toLowerCase().includes(searchTerm));
+        const matchesPage = !pageFilter || log.page === pageFilter;
+        return matchesSearch && matchesPage;
+    });
+
+    renderLogs();
+}
+
+async function clearLogs() {
+    if (!confirm('Are you sure you want to clear all logs? This cannot be undone.')) return;
+    
+    logs = [];
+    filteredLogs = [];
+    renderLogs();
+    updateLogStats();
+    showToast('Logs cleared successfully', 'success');
+    
+    try {
+        await fetch('/api/logs', { method: 'DELETE' });
+    } catch (e) {}
+}
+
+function exportLogs() {
+    const csv = ['Page,Timestamp,Referrer,User Agent'];
+    filteredLogs.forEach(log => {
+        csv.push(`"${log.page}","${log.timestamp}","${log.referrer || ''}","${log.user_agent || ''}"`);
+    });
+    
+    const blob = new Blob([csv.join('\n')], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `logs_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    showToast('Logs exported successfully', 'success');
+}
+
+// Credentials Management
+function initCredentials() {
+    const credentialsForm = document.getElementById('credentialsForm');
+    if (credentialsForm) {
+        credentialsForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(credentialsForm);
+            const credentials = Object.fromEntries(formData);
+            
+            if (credentials.newPassword !== credentials.confirmPassword) {
+                showToast('Passwords do not match', 'error');
+                return;
+            }
+            
+            try {
+                await fetch('/api/admin/credentials', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: credentials.username,
+                        password: credentials.newPassword
+                    })
+                });
+                showToast('Credentials updated successfully', 'success');
+                credentialsForm.reset();
+            } catch (error) {
+                showToast('Failed to update credentials', 'error');
+            }
+        });
+    }
+}
+
+// Toast Notifications
+function showToast(message, type = 'info') {
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+        <span>${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span>
+        <span>${message}</span>
+    `;
+    
+    container.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.animation = 'slideInRight 0.3s ease reverse';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
-    admin = new AdminPanel();
+    // Service form
+    const serviceForm = document.getElementById('serviceForm');
+    if (serviceForm) {
+        serviceForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveService(serviceForm);
+        });
+    }
+
+    // Log filters
+    const logSearch = document.getElementById('logSearch');
+    const pageFilter = document.getElementById('pageFilter');
+    if (logSearch) logSearch.addEventListener('input', filterLogs);
+    if (pageFilter) pageFilter.addEventListener('change', filterLogs);
+
+    // Modal close on overlay click
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.classList.remove('active');
+            }
+        });
+    });
 });
+
+// Sidebar Navigation
+function navigateTo(section) {
+    const tab = document.querySelector(`[data-tab="${section}"]`);
+    if (tab) tab.click();
+}

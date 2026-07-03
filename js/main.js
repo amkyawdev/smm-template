@@ -1,307 +1,304 @@
-/**
- * SMM Service - Main Page JavaScript
- */
-
-class SMMService {
-    constructor() {
-        this.apiBase = '/api';
-        this.telegramLink = '#';
-        this.init();
-    }
-
-    async init() {
-        await this.loadSettings();
-        await this.loadServices();
-        this.setupEventListeners();
-        this.setupScrollAnimations();
-        this.setupStatsCounter();
-        this.initThreeFlames();
-    }
-
-    async loadSettings() {
-        try {
-            const response = await fetch(`${this.apiBase}/settings`);
-            const data = await response.json();
-            
-            if (data.site_title) {
-                document.title = data.site_title;
-                const logo = document.querySelector('.logo');
-                if (logo) logo.textContent = data.site_title;
-            }
-            if (data.telegram_link) {
-                this.telegramLink = data.telegram_link;
-                this.updateTelegramLinks();
-            }
-        } catch (error) {
-            console.log('Using default settings');
-        }
-    }
-
-    async loadServices() {
-        try {
-            const response = await fetch(`${this.apiBase}/services`);
-            const services = await response.json();
-            this.renderServices(services);
-        } catch (error) {
-            console.log('Loading default services');
-            this.renderDefaultServices();
-        }
-    }
-
-    renderServices(services) {
-        const container = document.getElementById('services-grid');
-        if (!container) return;
-
-        container.innerHTML = services.map(service => this.createServiceCard(service)).join('');
-        
-        container.querySelectorAll('.buy-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => this.handleBuy(e));
-        });
-    }
-
-    renderDefaultServices() {
-        const container = document.getElementById('services-grid');
-        if (!container) return;
-
-        const defaults = [
-            { id: 1, name: 'Instagram Followers', icon: 'instagram', price: 9.99, description: 'High-quality Instagram followers', features: ['Real profiles', 'Fast delivery', '24/7 support'], badge: 'Popular' },
-            { id: 2, name: 'TikTok Views', icon: 'play-circle', price: 4.99, description: 'Boost your TikTok video views', features: ['Instant start', 'High retention', 'Safe & secure'], badge: '' },
-            { id: 3, name: 'YouTube Subscribers', icon: 'youtube', price: 19.99, description: 'Grow your YouTube channel', features: ['Real users', 'Gradual delivery', 'Money-back guarantee'], badge: 'Best' },
-            { id: 4, name: 'Twitter Followers', icon: 'twitter', price: 7.99, description: 'Increase Twitter presence', features: ['Quality accounts', 'Drop protection', 'Instant delivery'], badge: '' },
-            { id: 5, name: 'Facebook Likes', icon: 'facebook', price: 5.99, description: 'Get more Facebook engagement', features: ['Real likes', 'Fast delivery', 'Secure payment'], badge: '' },
-            { id: 6, name: 'Telegram Members', icon: 'send', price: 8.99, description: 'Grow your Telegram group', features: ['Active members', 'No bots', '24/7 support'], badge: 'Hot' }
-        ];
-
-        container.innerHTML = defaults.map(service => this.createServiceCard(service)).join('');
-        
-        container.querySelectorAll('.buy-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => this.handleBuy(e));
-        });
-    }
-
-    createServiceCard(service) {
-        const features = service.features ? service.features.split(',').map(f => f.trim()) : [];
-        return `
-            <div class="service-card" data-service-id="${service.id}">
-                ${service.badge ? `<span class="service-badge">${service.badge}</span>` : ''}
-                <div class="service-icon">
-                    <i class="bi bi-${service.icon || 'star'}"></i>
-                </div>
-                <h3 class="service-title">${service.name}</h3>
-                <div class="service-price">$${service.price}<span>/order</span></div>
-                <p class="service-description">${service.description || ''}</p>
-                <ul class="service-features">
-                    ${features.map(f => `<li><i class="bi bi-check-circle-fill"></i> ${f}</li>`).join('')}
-                </ul>
-                <button class="btn btn-primary buy-btn" data-service="${service.name}" data-price="${service.price}">
-                    Buy Now
-                </button>
-            </div>
-        `;
-    }
-
-    handleBuy(e) {
-        const btn = e.currentTarget;
-        const service = btn.dataset.service;
-        const price = btn.dataset.price;
-        
-        this.createRipple(e, btn);
-        
+// Main JavaScript - Improved Animations
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize loader
+    const loader = document.querySelector('.loader');
+    if (loader) {
         setTimeout(() => {
-            window.open(this.telegramLink, '_blank');
-        }, 300);
+            loader.classList.add('hidden');
+            initAnimations();
+        }, 500);
+    } else {
+        initAnimations();
     }
 
-    createRipple(e, element) {
-        const ripple = document.createElement('span');
-        ripple.classList.add('ripple-effect');
-        
-        const rect = element.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        
-        ripple.style.width = ripple.style.height = `${size}px`;
-        ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
-        ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
-        
-        element.style.position = 'relative';
-        element.style.overflow = 'hidden';
-        element.appendChild(ripple);
-        
-        setTimeout(() => ripple.remove(), 600);
-    }
-
-    updateTelegramLinks() {
-        document.querySelectorAll('.telegram-link, .floating-telegram, .btn-telegram').forEach(el => {
-            el.href = this.telegramLink;
-            el.onclick = (e) => {
-                e.preventDefault();
-                window.open(this.telegramLink, '_blank');
-            };
+    // Mobile menu toggle
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (mobileMenuBtn && navLinks) {
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            mobileMenuBtn.classList.toggle('active');
         });
     }
 
-    setupEventListeners() {
-        // Smooth scroll for navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', (e) => {
-                e.preventDefault();
-                const target = document.querySelector(anchor.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
+    // Navbar scroll effect
+    const navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
 
-        // Touch feedback
-        document.querySelectorAll('.btn, .service-card').forEach(el => {
-            el.addEventListener('touchstart', () => {}, { passive: true });
-        });
-
-        // Navbar scroll effect
-        window.addEventListener('scroll', () => {
-            const navbar = document.querySelector('.navbar');
-            if (navbar) {
-                navbar.classList.toggle('scrolled', window.scrollY > 50);
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
-    }
+    });
 
-    setupScrollAnimations() {
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+    // Animate elements on scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('fade-in-up');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.service-card, .stat-item, .why-us-item, .testimonial-card').forEach(el => {
-            el.style.opacity = '0';
-            observer.observe(el);
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-in');
+                observer.unobserve(entry.target);
+            }
         });
-    }
+    }, observerOptions);
 
-    setupStatsCounter() {
-        const statsObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    this.animateCounter(entry.target);
-                    statsObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.5 });
+    document.querySelectorAll('.feature-card, .service-card, .stat-item').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
 
-        document.querySelectorAll('.stat-number').forEach(stat => {
-            statsObserver.observe(stat);
-        });
-    }
-
-    animateCounter(element) {
-        const target = parseInt(element.dataset.target || element.textContent.replace(/,/g, ''));
-        const suffix = element.dataset.suffix || '';
-        const duration = 2000;
-        const step = target / (duration / 16);
-        let current = 0;
-
-        const update = () => {
-            current += step;
-            if (current < target) {
-                element.textContent = Math.floor(current).toLocaleString() + suffix;
-                requestAnimationFrame(update);
+    // Counter animation for stats
+    function animateCounter(element, target, duration = 2000) {
+        let start = 0;
+        const increment = target / (duration / 16);
+        
+        function updateCounter() {
+            start += increment;
+            if (start < target) {
+                element.textContent = Math.floor(start).toLocaleString();
+                requestAnimationFrame(updateCounter);
             } else {
-                element.textContent = target.toLocaleString() + suffix;
+                element.textContent = target.toLocaleString();
             }
-        };
-
-        update();
-    }
-
-    initThreeFlames() {
-        if (typeof THREE !== 'undefined' && document.getElementById('bg-canvas')) {
-            this.initThreeJS();
         }
-    }
-
-    initThreeJS() {
-        const canvas = document.getElementById('bg-canvas');
-        if (!canvas) return;
-
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
         
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        updateCounter();
+    }
 
-        // Flame particles
-        const flameGeometry = new THREE.BufferGeometry();
-        const flameCount = 2000;
-        const flamePositions = new Float32Array(flameCount * 3);
-        const flameColors = new Float32Array(flameCount * 3);
-
-        for (let i = 0; i < flameCount; i++) {
-            flamePositions[i * 3] = (Math.random() - 0.5) * 50;
-            flamePositions[i * 3 + 1] = Math.random() * 30 - 5;
-            flamePositions[i * 3 + 2] = (Math.random() - 0.5) * 50;
-            
-            flameColors[i * 3] = 0.4 + Math.random() * 0.3;
-            flameColors[i * 3 + 1] = 0.2 + Math.random() * 0.2;
-            flameColors[i * 3 + 2] = 0.1;
-        }
-
-        flameGeometry.setAttribute('position', new THREE.BufferAttribute(flamePositions, 3));
-        flameGeometry.setAttribute('color', new THREE.BufferAttribute(flameColors, 3));
-
-        const flameMaterial = new THREE.PointsMaterial({
-            size: 0.15,
-            vertexColors: true,
-            transparent: true,
-            opacity: 0.8,
-            blending: THREE.AdditiveBlending
-        });
-
-        const flames = new THREE.Points(flameGeometry, flameMaterial);
-        scene.add(flames);
-
-        camera.position.z = 15;
-
-        let time = 0;
-        function animate() {
-            requestAnimationFrame(animate);
-            time += 0.01;
-
-            const positions = flames.geometry.attributes.position.array;
-            for (let i = 0; i < flameCount; i++) {
-                positions[i * 3 + 1] += 0.05 + Math.random() * 0.02;
-                positions[i * 3] += Math.sin(time + i * 0.01) * 0.01;
-                
-                if (positions[i * 3 + 1] > 25) {
-                    positions[i * 3 + 1] = -5;
-                    positions[i * 3] = (Math.random() - 0.5) * 50;
-                }
+    const statObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = parseInt(entry.target.getAttribute('data-count'));
+                animateCounter(entry.target, target);
+                statObserver.unobserve(entry.target);
             }
-            flames.geometry.attributes.position.needsUpdate = true;
+        });
+    }, { threshold: 0.5 });
 
-            renderer.render(scene, camera);
-        }
+    document.querySelectorAll('.stat-item h3[data-count]').forEach(el => {
+        statObserver.observe(el);
+    });
 
-        animate();
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+    // Parallax effect for hero section
+    const hero = document.querySelector('.hero');
+    if (hero) {
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+            hero.style.opacity = 1 - (scrolled * 0.002);
         });
     }
+
+    // Magnetic button effect
+    document.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            
+            btn.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
+        });
+        
+        btn.addEventListener('mouseleave', () => {
+            btn.style.transform = 'translate(0, 0)';
+        });
+    });
+
+    // Card tilt effect
+    document.querySelectorAll('.feature-card, .service-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = (y - centerY) / 20;
+            const rotateY = (centerX - x) / 20;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+        });
+    });
+
+    // Ripple effect for buttons
+    document.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const ripple = document.createElement('span');
+            const size = Math.max(rect.width, rect.height);
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = e.clientX - rect.left - size / 2 + 'px';
+            ripple.style.top = e.clientY - rect.top - size / 2 + 'px';
+            ripple.classList.add('ripple');
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
+
+    // Typewriter effect for hero title
+    const heroTitle = document.querySelector('.hero h1');
+    if (heroTitle) {
+        const text = heroTitle.textContent;
+        heroTitle.textContent = '';
+        let i = 0;
+        
+        function typeWriter() {
+            if (i < text.length) {
+                heroTitle.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 50);
+            }
+        }
+        
+        setTimeout(typeWriter, 1000);
+    }
+
+    // Initialize Three.js background
+    initThreeBackground();
+});
+
+// Initialize animations after page load
+function initAnimations() {
+    // Stagger animation for grid items
+    const gridItems = document.querySelectorAll('.features-grid > *, .services-grid > *');
+    gridItems.forEach((item, index) => {
+        item.style.transitionDelay = `${index * 0.1}s`;
+    });
 }
 
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    window.smmService = new SMMService();
-});
+// Three.js Background Animation
+function initThreeBackground() {
+    const canvas = document.getElementById('bg-canvas');
+    if (!canvas || typeof THREE === 'undefined') return;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    // Create particles
+    const particleCount = 500;
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3);
+    const colors = new Float32Array(particleCount * 3);
+    const sizes = new Float32Array(particleCount);
+
+    const color = new THREE.Color('#0ea5e9');
+
+    for (let i = 0; i < particleCount; i++) {
+        positions[i * 3] = (Math.random() - 0.5) * 10;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 10;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 10;
+        
+        colors[i * 3] = color.r;
+        colors[i * 3 + 1] = color.g;
+        colors[i * 3 + 2] = color.b;
+        
+        sizes[i] = Math.random() * 0.05 + 0.02;
+    }
+
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+    const material = new THREE.PointsMaterial({
+        size: 0.05,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.8,
+        blending: THREE.AdditiveBlending
+    });
+
+    const particles = new THREE.Points(geometry, material);
+    scene.add(particles);
+
+    camera.position.z = 3;
+
+    // Mouse interaction
+    let mouseX = 0;
+    let mouseY = 0;
+    let targetX = 0;
+    let targetY = 0;
+
+    document.addEventListener('mousemove', (event) => {
+        mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+        mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+    });
+
+    // Animation loop
+    function animate() {
+        requestAnimationFrame(animate);
+
+        targetX += (mouseX - targetX) * 0.02;
+        targetY += (mouseY - targetY) * 0.02;
+
+        particles.rotation.x += 0.0005;
+        particles.rotation.y += 0.0005;
+        
+        particles.rotation.x += targetY * 0.01;
+        particles.rotation.y += targetX * 0.01;
+
+        renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // Resize handler
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+}
+
+// Add CSS for animation classes
+const style = document.createElement('style');
+style.textContent = `
+    .animate-in {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+    }
+    
+    .btn .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        transform: scale(0);
+        animation: ripple 0.6s linear;
+        pointer-events: none;
+    }
+    
+    @keyframes ripple {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);

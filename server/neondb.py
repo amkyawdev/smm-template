@@ -1,616 +1,441 @@
 """
-SMM Service - Neon DB API
-Serverless Python backend for SMM Service website
+NeonDB - Database Module with Website Logs Feature
+Handles all database operations including services, settings, credentials, and website logs
 """
 
-import os
 import json
-import re
+import os
 from datetime import datetime
-from vercel import Vercel
+from typing import Dict, List, Optional, Any
 
-# Try to import psycopg2, fallback to mock if not available
-try:
-    import psycopg2
-    from psycopg2.extras import RealDictCursor
-    HAS_PG = True
-except ImportError:
-    HAS_PG = False
+# File paths for JSON-based storage
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, '..', 'data')
 
-# Environment variables
-DATABASE_URL = os.environ.get('NEON_DATABASE_URL', '')
+# Ensure data directory exists
+os.makedirs(DATA_DIR, exist_ok=True)
 
-# CORS headers
-HEADERS = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Content-Type': 'application/json'
-}
+# File paths
+SERVICES_FILE = os.path.join(DATA_DIR, 'services.json')
+SETTINGS_FILE = os.path.join(DATA_DIR, 'settings.json')
+CREDENTIALS_FILE = os.path.join(DATA_DIR, 'credentials.json')
+LOGS_FILE = os.path.join(DATA_DIR, 'website_logs.json')
 
-def get_db_connection():
-    """Get database connection with SSL"""
-    if not HAS_PG or not DATABASE_URL:
+
+def _load_json(filepath: str, default: Any = None) -> Any:
+    """Load JSON data from file"""
+    try:
+        if os.path.exists(filepath):
+            with open(filepath, 'r') as f:
+                return json.load(f)
+        return default if default is not None else []
+    except (json.JSONDecodeError, IOError):
+        return default if default is not None else []
+
+
+def _save_json(filepath: str, data: Any) -> bool:
+    """Save JSON data to file"""
+    try:
+        with open(filepath, 'w') as f:
+            json.dump(data, f, indent=4, default=str)
+        return True
+    except IOError:
+        return False
+
+
+class Database:
+    """Main database class for managing all data operations"""
+    
+    def __init__(self):
+        self.services = self._load_services()
+        self.settings = self._load_settings()
+        self.credentials = self._load_credentials()
+        self.logs = self._load_logs()
+    
+    # ==================== Services ====================
+    
+    def _load_services(self) -> List[Dict]:
+        """Load services from file"""
+        return _load_json(SERVICES_FILE, [])
+    
+    def get_services(self) -> List[Dict]:
+        """Get all services"""
+        return self.services
+    
+    def get_service(self, service_id: int) -> Optional[Dict]:
+        """Get a single service by ID"""
+        for service in self.services:
+            if service.get('id') == service_id:
+                return service
         return None
     
-    return psycopg2.connect(DATABASE_URL, sslmode='require')
-
-def init_db():
-    """Initialize database tables"""
-    conn = get_db_connection()
-    if not conn:
+    def add_service(self, service_data: Dict) -> Dict:
+        """Add a new service"""
+        service_id = int(datetime.now().timestamp() * 1000)
+        service = {
+            'id': service_id,
+            'name': service_data.get('name', ''),
+            'price': float(service_data.get('price', 0)),
+            'description': service_data.get('description', ''),
+            'icon': service_data.get('icon', '📦'),
+            'created_at': datetime.now().isoformat(),
+            'updated_at': datetime.now().isoformat()
+        }
+        self.services.append(service)
+        self._save_services()
+        return service
+    
+    def update_service(self, service_id: int, service_data: Dict) -> Optional[Dict]:
+        """Update an existing service"""
+        for i, service in enumerate(self.services):
+            if service.get('id') == service_id:
+                self.services[i].update(service_data)
+                self.services[i]['updated_at'] = datetime.now().isoformat()
+                self._save_services()
+                return self.services[i]
+        return None
+    
+    def delete_service(self, service_id: int) -> bool:
+        """Delete a service"""
+        initial_len = len(self.services)
+        self.services = [s for s in self.services if s.get('id') != service_id]
+        if len(self.services) < initial_len:
+            self._save_services()
+            return True
         return False
     
-    try:
-        cur = conn.cursor()
+    def _save_services(self):
+        """Save services to file"""
+        _save_json(SERVICES_FILE, self.services)
+    
+    # ==================== Settings ====================
+    
+    def _load_settings(self) -> Dict:
+        """Load settings from file"""
+        return _load_json(SETTINGS_FILE, {
+            'title': 'SMM Services',
+            'subtitle': 'Premium Social Media Marketing',
+            'telegram': '',
+            'sliteText': 'Welcome to our SMM panel',
+            'welcomeMessage': 'Welcome to our premium SMM services platform.',
+            'updated_at': ''
+        })
+    
+    def get_settings(self) -> Dict:
+        """Get all settings"""
+        return self.settings
+    
+    def update_settings(self, settings_data: Dict) -> Dict:
+        """Update settings"""
+        self.settings.update(settings_data)
+        self.settings['updated_at'] = datetime.now().isoformat()
+        _save_json(SETTINGS_FILE, self.settings)
+        return self.settings
+    
+    # ==================== Credentials ====================
+    
+    def _load_credentials(self) -> Dict:
+        """Load admin credentials from file"""
+        return _load_json(CREDENTIALS_FILE, {
+            'username': 'admin',
+            'password': '',  # hashed password
+            'updated_at': ''
+        })
+    
+    def get_credentials(self) -> Dict:
+        """Get admin credentials"""
+        return self.credentials
+    
+    def update_credentials(self, username: str, password: str = None) -> Dict:
+        """Update admin credentials"""
+        self.credentials['username'] = username
+        if password:
+            # In production, hash the password before storing
+            # self.credentials['password'] = hash_password(password)
+            self.credentials['password'] = password
+        self.credentials['updated_at'] = datetime.now().isoformat()
+        _save_json(CREDENTIALS_FILE, self.credentials)
+        return self.credentials
+    
+    def verify_credentials(self, username: str, password: str) -> bool:
+        """Verify admin credentials"""
+        creds = self.credentials
+        return (creds.get('username') == username and 
+                creds.get('password') == password)
+    
+    # ==================== Website Logs ====================
+    
+    def _load_logs(self) -> List[Dict]:
+        """Load website logs from file"""
+        return _load_json(LOGS_FILE, [])
+    
+    def get_logs(self, page: str = None, limit: int = 100) -> List[Dict]:
+        """Get website logs with optional filtering"""
+        logs = self.logs
         
-        # Create settings table
-        cur.execute('''
-            CREATE TABLE IF NOT EXISTS settings (
-                id SERIAL PRIMARY KEY,
-                site_title VARCHAR(255) DEFAULT 'SMM Service',
-                subtitle TEXT DEFAULT 'Your Trusted Social Media Partner',
-                telegram_link VARCHAR(500) DEFAULT 'https://t.me/yourchannel',
-                contact_email VARCHAR(255) DEFAULT 'support@smmservice.com',
-                working_hours VARCHAR(100) DEFAULT '24/7 Available',
-                prices JSONB DEFAULT '{}',
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        ''')
+        if page:
+            logs = [log for log in logs if log.get('page') == page]
         
-        # Create admin table
-        cur.execute('''
-            CREATE TABLE IF NOT EXISTS admin (
-                id SERIAL PRIMARY KEY,
-                username VARCHAR(100) DEFAULT 'admin',
-                password VARCHAR(255) DEFAULT 'admin123',
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        ''')
+        # Sort by timestamp descending (newest first)
+        logs.sort(key=lambda x: x.get('timestamp', ''), reverse=True)
         
-        # Create services table
-        cur.execute('''
-            CREATE TABLE IF NOT EXISTS services (
-                id SERIAL PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
-                icon VARCHAR(100) DEFAULT 'star',
-                price DECIMAL(10, 2) NOT NULL,
-                description TEXT,
-                features TEXT,
-                badge VARCHAR(50),
-                color VARCHAR(20) DEFAULT '#6366f1',
-                featured BOOLEAN DEFAULT FALSE,
-                active BOOLEAN DEFAULT TRUE,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        ''')
+        return logs[:limit]
+    
+    def add_log(self, log_data: Dict) -> Dict:
+        """Add a new website log entry"""
+        log = {
+            'id': len(self.logs) + 1,
+            'page': log_data.get('page', '/'),
+            'timestamp': log_data.get('timestamp', datetime.now().isoformat()),
+            'referrer': log_data.get('referrer', 'direct'),
+            'user_agent': log_data.get('user_agent', 'Unknown'),
+            'ip': log_data.get('ip', None),
+            'country': log_data.get('country', None),
+            'city': log_data.get('city', None),
+            'device': log_data.get('device', 'Unknown'),
+            'browser': log_data.get('browser', 'Unknown'),
+            'os': log_data.get('os', 'Unknown')
+        }
+        self.logs.append(log)
+        self._save_logs()
+        return log
+    
+    def log_visit(self, request=None, response=None) -> Dict:
+        """Log a page visit from request object"""
+        log_data = {
+            'page': '/',
+            'timestamp': datetime.now().isoformat(),
+            'referrer': 'direct',
+            'user_agent': 'Unknown'
+        }
         
-        # Create orders table
-        cur.execute('''
-            CREATE TABLE IF NOT EXISTS orders (
-                id SERIAL PRIMARY KEY,
-                service_id INTEGER REFERENCES services(id),
-                service_name VARCHAR(255),
-                customer_name VARCHAR(255),
-                customer_email VARCHAR(255),
-                amount DECIMAL(10, 2) NOT NULL,
-                status VARCHAR(50) DEFAULT 'pending',
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        ''')
+        if request:
+            log_data['page'] = getattr(request, 'path', '/')
+            log_data['referrer'] = request.headers.get('Referer', 'direct')
+            log_data['user_agent'] = request.headers.get('User-Agent', 'Unknown')
+            log_data['ip'] = getattr(request, 'remote_addr', None)
+            
+            # Parse user agent for device info
+            ua = log_data['user_agent']
+            log_data['device'] = self._parse_device(ua)
+            log_data['browser'] = self._parse_browser(ua)
+            log_data['os'] = self._parse_os(ua)
         
-        # Insert default settings if not exists
-        cur.execute('SELECT COUNT(*) FROM settings')
-        if cur.fetchone()[0] == 0:
-            cur.execute('''
-                INSERT INTO settings (site_title, subtitle, telegram_link, contact_email, working_hours)
-                VALUES ('SMM Service', 'Your Trusted Social Media Partner', 'https://t.me/yourchannel', 'support@smmservice.com', '24/7 Available')
-            ''')
+        return self.add_log(log_data)
+    
+    def _parse_device(self, user_agent: str) -> str:
+        """Parse device type from user agent"""
+        ua = user_agent.lower()
+        if 'mobile' in ua or 'android' in ua:
+            return 'Mobile'
+        elif 'tablet' in ua or 'ipad' in ua:
+            return 'Tablet'
+        return 'Desktop'
+    
+    def _parse_browser(self, user_agent: str) -> str:
+        """Parse browser from user agent"""
+        ua = user_agent.lower()
+        if 'chrome' in ua and 'edg' not in ua:
+            return 'Chrome'
+        elif 'firefox' in ua:
+            return 'Firefox'
+        elif 'safari' in ua and 'chrome' not in ua:
+            return 'Safari'
+        elif 'edg' in ua:
+            return 'Edge'
+        elif 'opera' in ua or 'opr' in ua:
+            return 'Opera'
+        return 'Unknown'
+    
+    def _parse_os(self, user_agent: str) -> str:
+        """Parse OS from user agent"""
+        ua = user_agent.lower()
+        if 'windows' in ua:
+            return 'Windows'
+        elif 'mac os' in ua or 'macos' in ua:
+            return 'macOS'
+        elif 'linux' in ua and 'android' not in ua:
+            return 'Linux'
+        elif 'android' in ua:
+            return 'Android'
+        elif 'ios' in ua or 'iphone' in ua or 'ipad' in ua:
+            return 'iOS'
+        return 'Unknown'
+    
+    def get_log_stats(self) -> Dict:
+        """Get statistics about website logs"""
+        if not self.logs:
+            return {
+                'total': 0,
+                'today': 0,
+                'unique_pages': 0,
+                'devices': {},
+                'browsers': {},
+                'referrers': {}
+            }
         
-        # Insert default admin if not exists
-        cur.execute('SELECT COUNT(*) FROM admin')
-        if cur.fetchone()[0] == 0:
-            cur.execute('''
-                INSERT INTO admin (username, password)
-                VALUES ('admin', 'admin123')
-            ''')
+        today = datetime.now().date().isoformat()
+        pages = set()
+        devices = {}
+        browsers = {}
+        referrers = {}
         
-        # Insert default services if not exists
-        cur.execute('SELECT COUNT(*) FROM services')
-        if cur.fetchone()[0] == 0:
-            default_services = [
-                ('Instagram Followers', 'instagram', 9.99, 'High-quality Instagram followers', 'Real profiles,Fast delivery,24/7 support', 'Popular', '#E4405F', True),
-                ('TikTok Views', 'play-circle', 4.99, 'Boost your TikTok video views', 'Instant start,High retention,Safe & secure', '', '#00F2EA', False),
-                ('YouTube Subscribers', 'youtube', 19.99, 'Grow your YouTube channel', 'Real users,Gradual delivery,Money-back guarantee', 'Best', '#FF0000', True),
-                ('Twitter Followers', 'twitter', 7.99, 'Increase Twitter presence', 'Quality accounts,Drop protection,Instant delivery', '', '#1DA1F2', False),
-                ('Facebook Likes', 'facebook', 5.99, 'Get more Facebook engagement', 'Real likes,Fast delivery,Secure payment', '', '#1877F2', False),
-                ('Telegram Members', 'telegram', 8.99, 'Grow your Telegram group', 'Active members,No bots,24/7 support', 'Hot', '#0088cc', False)
+        for log in self.logs:
+            # Count by date
+            log_date = log.get('timestamp', '')[:10]
+            
+            # Count unique pages
+            page = log.get('page', '/')
+            if page:
+                pages.add(page)
+            
+            # Count devices
+            device = log.get('device', 'Unknown')
+            devices[device] = devices.get(device, 0) + 1
+            
+            # Count browsers
+            browser = log.get('browser', 'Unknown')
+            browsers[browser] = browsers.get(browser, 0) + 1
+            
+            # Count referrers
+            referrer = log.get('referrer', 'direct')
+            referrers[referrer] = referrers.get(referrer, 0) + 1
+        
+        return {
+            'total': len(self.logs),
+            'today': len([l for l in self.logs if l.get('timestamp', '')[:10] == today]),
+            'unique_pages': len(pages),
+            'devices': devices,
+            'browsers': browsers,
+            'referrers': referrers
+        }
+    
+    def clear_logs(self) -> bool:
+        """Clear all logs"""
+        self.logs = []
+        return self._save_logs()
+    
+    def delete_log(self, log_id: int) -> bool:
+        """Delete a specific log entry"""
+        initial_len = len(self.logs)
+        self.logs = [l for l in self.logs if l.get('id') != log_id]
+        if len(self.logs) < initial_len:
+            self._save_logs()
+            return True
+        return False
+    
+    def _save_logs(self) -> bool:
+        """Save logs to file"""
+        return _save_json(LOGS_FILE, self.logs)
+    
+    # ==================== Utility Methods ====================
+    
+    def export_logs_csv(self) -> str:
+        """Export logs as CSV string"""
+        if not self.logs:
+            return ''
+        
+        headers = ['ID', 'Page', 'Timestamp', 'Referrer', 'User Agent', 'IP', 'Device', 'Browser', 'OS']
+        rows = [','.join(headers)]
+        
+        for log in self.logs:
+            row = [
+                str(log.get('id', '')),
+                log.get('page', ''),
+                log.get('timestamp', ''),
+                log.get('referrer', ''),
+                log.get('user_agent', ''),
+                log.get('ip', ''),
+                log.get('device', ''),
+                log.get('browser', ''),
+                log.get('os', '')
             ]
-            for service in default_services:
-                cur.execute('''
-                    INSERT INTO services (name, icon, price, description, features, badge, color, featured)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                ''', service)
+            rows.append(','.join(f'"{r}"' for r in row))
         
-        conn.commit()
-        cur.close()
-        conn.close()
-        return True
-    except Exception as e:
-        print(f"Database initialization error: {e}")
-        if conn:
-            conn.close()
-        return False
+        return '\n'.join(rows)
+    
+    def to_dict(self) -> Dict:
+        """Convert database state to dictionary"""
+        return {
+            'services': self.services,
+            'settings': self.settings,
+            'credentials': self.credentials,
+            'logs': self.logs,
+            'log_stats': self.get_log_stats()
+        }
 
-def get_settings():
-    """Get site settings"""
-    conn = get_db_connection()
-    
-    if conn:
-        try:
-            cur = conn.cursor(cursor_factory=RealDictCursor)
-            cur.execute('SELECT * FROM settings ORDER BY id DESC LIMIT 1')
-            result = cur.fetchone()
-            cur.close()
-            conn.close()
-            
-            if result:
-                return {
-                    'site_title': result['site_title'],
-                    'subtitle': result['subtitle'],
-                    'telegram_link': result['telegram_link'],
-                    'contact_email': result['contact_email'],
-                    'working_hours': result['working_hours'],
-                    'prices': result['prices']
-                }
-        except Exception as e:
-            print(f"Error getting settings: {e}")
-            conn.close()
-    
-    # Return default settings
-    return {
-        'site_title': 'SMM Service',
-        'subtitle': 'Your Trusted Social Media Partner',
-        'telegram_link': 'https://t.me/yourchannel',
-        'contact_email': 'support@smmservice.com',
-        'working_hours': '24/7 Available',
-        'prices': {}
-    }
 
-def update_settings(data):
-    """Update site settings"""
-    conn = get_db_connection()
-    
-    if conn:
-        try:
-            cur = conn.cursor()
-            cur.execute('''
-                UPDATE settings 
-                SET site_title = %s, subtitle = %s, telegram_link = %s, 
-                    contact_email = %s, working_hours = %s, prices = %s,
-                    updated_at = CURRENT_TIMESTAMP
-                WHERE id = (SELECT id FROM settings ORDER BY id DESC LIMIT 1)
-            ''', (
-                data.get('site_title', 'SMM Service'),
-                data.get('subtitle', ''),
-                data.get('telegram_link', ''),
-                data.get('contact_email', ''),
-                data.get('working_hours', ''),
-                json.dumps(data.get('prices', {}))
-            ))
-            conn.commit()
-            cur.close()
-            conn.close()
-            return True
-        except Exception as e:
-            print(f"Error updating settings: {e}")
-            conn.close()
-            return False
-    
-    return True
+# Global database instance
+db = Database()
 
-def get_admin():
-    """Get admin credentials"""
-    conn = get_db_connection()
-    
-    if conn:
-        try:
-            cur = conn.cursor(cursor_factory=RealDictCursor)
-            cur.execute('SELECT username, password FROM admin LIMIT 1')
-            result = cur.fetchone()
-            cur.close()
-            conn.close()
-            
-            if result:
-                return {
-                    'username': result['username'],
-                    'password': result['password']
-                }
-        except Exception as e:
-            print(f"Error getting admin: {e}")
-            conn.close()
-    
-    return {'username': 'admin', 'password': 'admin123'}
 
-def update_admin(data):
-    """Update admin credentials"""
-    conn = get_db_connection()
-    
-    if conn:
-        try:
-            cur = conn.cursor()
-            cur.execute('''
-                UPDATE admin 
-                SET username = %s, password = %s
-                WHERE id = 1
-            ''', (
-                data.get('username', 'admin'),
-                data.get('password', 'admin123')
-            ))
-            conn.commit()
-            cur.close()
-            conn.close()
-            return True
-        except Exception as e:
-            print(f"Error updating admin: {e}")
-            conn.close()
-            return False
-    
-    return True
+# Flask middleware for automatic logging
+def log_request(request):
+    """Middleware function to log requests"""
+    db.log_visit(request)
 
-def get_services():
-    """Get all active services"""
-    conn = get_db_connection()
-    
-    if conn:
-        try:
-            cur = conn.cursor(cursor_factory=RealDictCursor)
-            cur.execute('SELECT * FROM services WHERE active = TRUE ORDER BY featured DESC, id ASC')
-            results = cur.fetchall()
-            cur.close()
-            conn.close()
-            
-            return [{
-                'id': r['id'],
-                'name': r['name'],
-                'icon': r['icon'],
-                'price': float(r['price']),
-                'description': r['description'],
-                'features': r['features'],
-                'badge': r['badge'],
-                'color': r['color'],
-                'featured': r['featured']
-            } for r in results]
-        except Exception as e:
-            print(f"Error getting services: {e}")
-            conn.close()
-    
-    # Return default services
-    return [
-        {'id': 1, 'name': 'Instagram Followers', 'icon': 'instagram', 'price': 9.99, 'description': 'High-quality followers', 'features': 'Real profiles,Fast delivery,24/7 support', 'badge': 'Popular', 'color': '#E4405F', 'featured': True},
-        {'id': 2, 'name': 'TikTok Views', 'icon': 'play-circle', 'price': 4.99, 'description': 'Boost views', 'features': 'Instant start,High retention', 'badge': '', 'color': '#00F2EA', 'featured': False},
-        {'id': 3, 'name': 'YouTube Subscribers', 'icon': 'youtube', 'price': 19.99, 'description': 'Grow channel', 'features': 'Real users,Money-back guarantee', 'badge': 'Best', 'color': '#FF0000', 'featured': True}
-    ]
 
-def get_service(service_id):
-    """Get a single service by ID"""
-    conn = get_db_connection()
-    
-    if conn:
-        try:
-            cur = conn.cursor(cursor_factory=RealDictCursor)
-            cur.execute('SELECT * FROM services WHERE id = %s', (service_id,))
-            result = cur.fetchone()
-            cur.close()
-            conn.close()
-            
-            if result:
-                return {
-                    'id': result['id'],
-                    'name': result['name'],
-                    'icon': result['icon'],
-                    'price': float(result['price']),
-                    'description': result['description'],
-                    'features': result['features'],
-                    'badge': result['badge'],
-                    'color': result['color'],
-                    'featured': result['featured']
-                }
-        except Exception as e:
-            print(f"Error getting service: {e}")
-            conn.close()
-    
-    return None
+# API helper functions
+def get_all_services():
+    """Get all services for API"""
+    return db.get_services()
+
 
 def create_service(data):
-    """Create a new service"""
-    conn = get_db_connection()
-    
-    if conn:
-        try:
-            cur = conn.cursor()
-            cur.execute('''
-                INSERT INTO services (name, icon, price, description, features, badge, color, featured)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                RETURNING id
-            ''', (
-                data.get('name'),
-                data.get('icon', 'star'),
-                data.get('price'),
-                data.get('description', ''),
-                data.get('features', ''),
-                data.get('badge', ''),
-                data.get('color', '#6366f1'),
-                data.get('featured', False)
-            ))
-            new_id = cur.fetchone()[0]
-            conn.commit()
-            cur.close()
-            conn.close()
-            return {'id': new_id, 'success': True}
-        except Exception as e:
-            print(f"Error creating service: {e}")
-            conn.close()
-            return {'error': str(e)}
-    
-    return {'id': 999, 'success': True}
+    """Create new service for API"""
+    return db.add_service(data)
 
-def update_service(service_id, data):
-    """Update an existing service"""
-    conn = get_db_connection()
-    
-    if conn:
-        try:
-            cur = conn.cursor()
-            cur.execute('''
-                UPDATE services 
-                SET name = %s, icon = %s, price = %s, description = %s, 
-                    features = %s, badge = %s, color = %s, featured = %s,
-                    updated_at = CURRENT_TIMESTAMP
-                WHERE id = %s
-            ''', (
-                data.get('name'),
-                data.get('icon', 'star'),
-                data.get('price'),
-                data.get('description', ''),
-                data.get('features', ''),
-                data.get('badge', ''),
-                data.get('color', '#6366f1'),
-                data.get('featured', False),
-                service_id
-            ))
-            conn.commit()
-            cur.close()
-            conn.close()
-            return {'success': True}
-        except Exception as e:
-            print(f"Error updating service: {e}")
-            conn.close()
-            return {'error': str(e)}
-    
-    return {'success': True}
 
-def delete_service(service_id):
-    """Delete a service (soft delete)"""
-    conn = get_db_connection()
-    
-    if conn:
-        try:
-            cur = conn.cursor()
-            cur.execute('UPDATE services SET active = FALSE WHERE id = %s', (service_id,))
-            conn.commit()
-            cur.close()
-            conn.close()
-            return {'success': True}
-        except Exception as e:
-            print(f"Error deleting service: {e}")
-            conn.close()
-            return {'error': str(e)}
-    
-    return {'success': True}
+def update_service_by_id(service_id, data):
+    """Update service for API"""
+    return db.update_service(service_id, data)
 
-def get_orders():
-    """Get all orders"""
-    conn = get_db_connection()
-    
-    if conn:
-        try:
-            cur = conn.cursor(cursor_factory=RealDictCursor)
-            cur.execute('SELECT * FROM orders ORDER BY created_at DESC')
-            results = cur.fetchall()
-            cur.close()
-            conn.close()
-            
-            return [{
-                'id': r['id'],
-                'service_id': r['service_id'],
-                'service_name': r['service_name'],
-                'customer_name': r['customer_name'],
-                'customer_email': r['customer_email'],
-                'amount': float(r['amount']),
-                'status': r['status'],
-                'created_at': r['created_at'].isoformat() if r['created_at'] else None
-            } for r in results]
-        except Exception as e:
-            print(f"Error getting orders: {e}")
-            conn.close()
-    
-    return []
 
-def create_order(data):
-    """Create a new order"""
-    conn = get_db_connection()
-    
-    if conn:
-        try:
-            cur = conn.cursor()
-            cur.execute('''
-                INSERT INTO orders (service_id, service_name, customer_name, customer_email, amount, status)
-                VALUES (%s, %s, %s, %s, %s, %s)
-                RETURNING id
-            ''', (
-                data.get('service_id'),
-                data.get('service_name'),
-                data.get('customer_name', ''),
-                data.get('customer_email', ''),
-                data.get('amount'),
-                data.get('status', 'pending')
-            ))
-            new_id = cur.fetchone()[0]
-            conn.commit()
-            cur.close()
-            conn.close()
-            return {'id': new_id, 'success': True}
-        except Exception as e:
-            print(f"Error creating order: {e}")
-            conn.close()
-            return {'error': str(e)}
-    
-    return {'id': 1000, 'success': True}
+def delete_service_by_id(service_id):
+    """Delete service for API"""
+    return db.delete_service(service_id)
 
-def update_prices(data):
-    """Update pricing data"""
-    settings = get_settings()
-    settings['prices'] = data.get('prices', {})
-    return update_settings(settings)
 
-def sanitize_input(text):
-    """Sanitize user input to prevent XSS"""
-    if not text:
-        return ''
-    # Remove HTML tags
-    text = re.sub(r'<[^>]*>', '', text)
-    # Escape special characters
-    text = text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
-    return text.strip()
+def get_all_settings():
+    """Get all settings for API"""
+    return db.get_settings()
 
-def handler(event, context):
-    """Main request handler"""
-    # Initialize database on first request
-    init_db()
+
+def update_settings_by_id(data):
+    """Update settings for API"""
+    return db.update_settings(data)
+
+
+def get_all_logs(page=None, limit=100):
+    """Get logs for API"""
+    return db.get_logs(page, limit)
+
+
+def get_logs_stats():
+    """Get log statistics for API"""
+    return db.get_log_stats()
+
+
+def clear_all_logs():
+    """Clear all logs for API"""
+    return db.clear_logs()
+
+
+if __name__ == '__main__':
+    # Initialize database with sample data
+    print("Initializing database...")
     
-    path = event.get('path', '/')
-    method = event.get('method', 'GET')
-    body = event.get('body', '{}')
+    # Add sample services
+    sample_services = [
+        {'name': 'Instagram Followers', 'price': 9.99, 'description': 'High quality Instagram followers', 'icon': '📸'},
+        {'name': 'TikTok Views', 'price': 4.99, 'description': 'Real TikTok views', 'icon': '🎵'},
+        {'name': 'YouTube Subscribers', 'price': 14.99, 'description': 'Active YouTube subscribers', 'icon': '▶️'},
+        {'name': 'Twitter Followers', 'price': 7.99, 'description': 'Premium Twitter followers', 'icon': '🐦'},
+        {'name': 'Telegram Members', 'price': 5.99, 'description': 'Real Telegram group members', 'icon': '✈️'}
+    ]
     
-    try:
-        data = json.loads(body) if body else {}
-    except:
-        data = {}
+    for service in sample_services:
+        db.add_service(service)
     
-    # Route handling
-    if path == '/api/settings':
-        if method == 'GET':
-            return {'statusCode': 200, 'headers': HEADERS, 'body': json.dumps(get_settings())}
-        elif method == 'POST':
-            sanitized_data = {
-                'site_title': sanitize_input(data.get('site_title', '')),
-                'subtitle': sanitize_input(data.get('subtitle', '')),
-                'telegram_link': sanitize_input(data.get('telegram_link', '')),
-                'contact_email': sanitize_input(data.get('contact_email', '')),
-                'working_hours': sanitize_input(data.get('working_hours', '')),
-                'prices': data.get('prices', {})
-            }
-            if update_settings(sanitized_data):
-                return {'statusCode': 200, 'headers': HEADERS, 'body': json.dumps({'success': True})}
-            return {'statusCode': 500, 'headers': HEADERS, 'body': json.dumps({'error': 'Failed to update settings'})}
-    
-    elif path == '/api/admin':
-        if method == 'GET':
-            return {'statusCode': 200, 'headers': HEADERS, 'body': json.dumps(get_admin())}
-        elif method == 'POST':
-            admin_data = {
-                'username': sanitize_input(data.get('username', 'admin')),
-                'password': data.get('password', 'admin123')  # In production, hash this!
-            }
-            if update_admin(admin_data):
-                return {'statusCode': 200, 'headers': HEADERS, 'body': json.dumps({'success': True})}
-            return {'statusCode': 500, 'headers': HEADERS, 'body': json.dumps({'error': 'Failed to update admin'})}
-    
-    elif path == '/api/services':
-        if method == 'GET':
-            return {'statusCode': 200, 'headers': HEADERS, 'body': json.dumps(get_services())}
-        elif method == 'POST':
-            service_data = {
-                'name': sanitize_input(data.get('name', '')),
-                'icon': sanitize_input(data.get('icon', 'star')),
-                'price': float(data.get('price', 0)),
-                'description': sanitize_input(data.get('description', '')),
-                'features': sanitize_input(data.get('features', '')),
-                'badge': sanitize_input(data.get('badge', '')),
-                'color': data.get('color', '#6366f1'),
-                'featured': bool(data.get('featured', False))
-            }
-            result = create_service(service_data)
-            if 'error' in result:
-                return {'statusCode': 500, 'headers': HEADERS, 'body': json.dumps(result)}
-            return {'statusCode': 201, 'headers': HEADERS, 'body': json.dumps(result)}
-    
-    elif path.startswith('/api/services/') and method == 'GET':
-        service_id = path.split('/')[-1]
-        if service_id.isdigit():
-            service = get_service(int(service_id))
-            if service:
-                return {'statusCode': 200, 'headers': HEADERS, 'body': json.dumps(service)}
-            return {'statusCode': 404, 'headers': HEADERS, 'body': json.dumps({'error': 'Service not found'})}
-    
-    elif path.startswith('/api/services/') and method == 'POST':
-        parts = path.split('/')
-        service_id = parts[-1] if parts[-1].isdigit() else parts[-2]
-        if service_id.isdigit():
-            service_data = {
-                'name': sanitize_input(data.get('name', '')),
-                'icon': sanitize_input(data.get('icon', 'star')),
-                'price': float(data.get('price', 0)),
-                'description': sanitize_input(data.get('description', '')),
-                'features': sanitize_input(data.get('features', '')),
-                'badge': sanitize_input(data.get('badge', '')),
-                'color': data.get('color', '#6366f1'),
-                'featured': bool(data.get('featured', False))
-            }
-            result = update_service(int(service_id), service_data)
-            if 'error' in result:
-                return {'statusCode': 500, 'headers': HEADERS, 'body': json.dumps(result)}
-            return {'statusCode': 200, 'headers': HEADERS, 'body': json.dumps(result)}
-    
-    elif path.startswith('/api/services/') and method == 'DELETE':
-        parts = path.split('/')
-        service_id = parts[-1] if parts[-1].isdigit() else parts[-2]
-        if service_id.isdigit():
-            result = delete_service(int(service_id))
-            if 'error' in result:
-                return {'statusCode': 500, 'headers': HEADERS, 'body': json.dumps(result)}
-            return {'statusCode': 200, 'headers': HEADERS, 'body': json.dumps({'success': True})}
-    
-    elif path == '/api/orders':
-        if method == 'GET':
-            return {'statusCode': 200, 'headers': HEADERS, 'body': json.dumps(get_orders())}
-        elif method == 'POST':
-            order_data = {
-                'service_id': data.get('service_id'),
-                'service_name': sanitize_input(data.get('service_name', '')),
-                'customer_name': sanitize_input(data.get('customer_name', '')),
-                'customer_email': sanitize_input(data.get('customer_email', '')),
-                'amount': float(data.get('amount', 0)),
-                'status': data.get('status', 'pending')
-            }
-            result = create_order(order_data)
-            if 'error' in result:
-                return {'statusCode': 500, 'headers': HEADERS, 'body': json.dumps(result)}
-            return {'statusCode': 201, 'headers': HEADERS, 'body': json.dumps(result)}
-    
-    elif path == '/api/prices' and method == 'POST':
-        result = update_prices(data)
-        if result:
-            return {'statusCode': 200, 'headers': HEADERS, 'body': json.dumps({'success': True})}
-        return {'statusCode': 500, 'headers': HEADERS, 'body': json.dumps({'error': 'Failed to update prices'})}
-    
-    # Health check
-    elif path == '/api/health':
-        return {'statusCode': 200, 'headers': HEADERS, 'body': json.dumps({'status': 'ok', 'timestamp': datetime.now().isoformat()})}
-    
-    # 404 for unknown routes
-    return {'statusCode': 404, 'headers': HEADERS, 'body': json.dumps({'error': 'Not found'})}
+    print(f"Added {len(sample_services)} sample services")
+    print("Database initialized successfully!")
