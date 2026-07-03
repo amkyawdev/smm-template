@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - SMM Pro</title>
+    <!-- Bootstrap Icons CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/admin.css">
@@ -12,21 +14,24 @@
 <body>
     <div id="three-bg"></div>
 
-    <!-- Login -->
+    <!-- Login Screen -->
     <div id="loginScreen" class="login-container">
         <div class="login-box">
+            <div class="login-icon">
+                <i class="bi bi-shield-lock"></i>
+            </div>
             <h2><span class="gradient-text">SMM Pro</span></h2>
-            <p class="subtitle">Admin Panel</p>
+            <p class="subtitle">Admin Panel Login</p>
             <form class="login-form" id="loginForm" onsubmit="handleLogin(event)">
                 <div class="form-group">
                     <label><i class="bi bi-person"></i> Username</label>
-                    <input type="text" id="loginUsername" placeholder="Enter username" required>
+                    <input type="text" id="loginUsername" placeholder="Enter your username" required>
                 </div>
                 <div class="form-group">
-                    <label><i class="bi bi-lock"></i> Password</label>
-                    <input type="password" id="loginPassword" placeholder="Enter password" required>
+                    <label><i class="bi bi-key"></i> Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
                 </div>
-                <button type="submit" class="btn-primary" style="width:100%;padding:12px;">
+                <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
                     <i class="bi bi-box-arrow-in-right"></i> Login
                 </button>
                 <div id="loginError"></div>
@@ -36,17 +41,18 @@
 
     <!-- Admin Panel -->
     <div id="adminPanel" style="display:none;">
-        <header class="header">
+        <header class="header" id="mainHeader">
             <div class="header-content">
                 <div class="logo">
                     <h1>SMM Pro</h1>
-                    <div class="subtitle-animation">Admin Panel</div>
+                    <div class="subtitle-animation">Admin Dashboard</div>
                 </div>
                 <nav class="nav-menu">
-                    <span style="color:var(--text-secondary);font-size:0.85rem;">
-                        <i class="bi bi-person-circle"></i> <span id="adminUsername">Admin</span>
+                    <span style="color:var(--text-secondary);font-size:0.9rem;display:flex;align-items:center;gap:8px;">
+                        <i class="bi bi-person-circle"></i> 
+                        <span id="adminUsername">Admin</span>
                     </span>
-                    <button class="btn-outline" style="padding:4px 16px;font-size:0.8rem;" onclick="handleLogout()">
+                    <button class="btn btn-sm btn-outline" onclick="handleLogout()">
                         <i class="bi bi-box-arrow-right"></i> Logout
                     </button>
                 </nav>
@@ -54,62 +60,114 @@
         </header>
 
         <div class="admin-panel">
-            <!-- Settings -->
-            <div class="admin-card">
-                <h3><i class="bi bi-gear"></i> Site Settings</h3>
-                <form id="settingsForm" onsubmit="updateSettings(event)" style="display:grid;gap:12px;">
-                    <input type="text" id="siteTitle" class="admin-input" placeholder="Site Title">
-                    <input type="text" id="siteSubtitle" class="admin-input" placeholder="Subtitle Text">
-                    <input type="url" id="telegramLink" class="admin-input" placeholder="Telegram Link">
-                    <button type="submit" class="btn-primary" style="padding:8px 25px;width:fit-content;">
-                        <i class="bi bi-save"></i> Save Settings
-                    </button>
+            <!-- Site Settings -->
+            <div class="admin-card fade-in">
+                <h3><i class="bi bi-gear-fill"></i> Site Settings</h3>
+                <form id="settingsForm" onsubmit="updateSettings(event)">
+                    <div class="admin-form-grid">
+                        <div>
+                            <label style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:8px;display:block;">
+                                <i class="bi bi-texttype"></i> Site Title
+                            </label>
+                            <input type="text" id="siteTitle" class="admin-input" placeholder="Enter site title">
+                        </div>
+                        <div>
+                            <label style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:8px;display:block;">
+                                <i class="bi bi-card-text"></i> Subtitle Text
+                            </label>
+                            <input type="text" id="siteSubtitle" class="admin-input" placeholder="Enter subtitle">
+                        </div>
+                        <div>
+                            <label style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:8px;display:block;">
+                                <i class="bi bi-telegram"></i> Telegram Link
+                            </label>
+                            <input type="url" id="telegramLink" class="admin-input" placeholder="https://t.me/yourchannel">
+                        </div>
+                    </div>
+                    <div style="margin-top:20px;">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Save Settings
+                        </button>
+                    </div>
                 </form>
             </div>
 
-            <!-- Pricing -->
-            <div class="admin-card">
-                <h3><i class="bi bi-tags"></i> Pricing Management</h3>
-                <form id="addPricingForm" onsubmit="addPackage(event)" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:15px;">
-                    <select id="serviceType" class="admin-input" required>
-                        <option value="followers">Followers</option>
-                        <option value="views">Views</option>
-                        <option value="likes">Likes</option>
-                        <option value="comments">Comments</option>
-                    </select>
-                    <input type="text" id="packageName" class="admin-input" placeholder="Package Name" required>
-                    <input type="number" id="quantity" class="admin-input" placeholder="Quantity" required>
-                    <input type="number" id="price" class="admin-input" placeholder="Price (Ks)" required>
-                    <button type="submit" class="btn-primary" style="padding:8px;">
-                        <i class="bi bi-plus-circle"></i> Add
-                    </button>
+            <!-- Pricing Management -->
+            <div class="admin-card fade-in fade-in-delay-1">
+                <h3><i class="bi bi-tags-fill"></i> Pricing Management</h3>
+                <form id="addPricingForm" onsubmit="addPackage(event)" class="admin-form-grid">
+                    <div>
+                        <label style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:8px;display:block;">
+                            <i class="bi bi-grid-3x3-gap"></i> Service Type
+                        </label>
+                        <select id="serviceType" class="admin-input admin-select" required>
+                            <option value="followers"><i class="bi bi-people"></i> Followers</option>
+                            <option value="views"><i class="bi bi-eye"></i> Views</option>
+                            <option value="likes"><i class="bi bi-heart"></i> Likes</option>
+                            <option value="comments"><i class="bi bi-chat"></i> Comments</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:8px;display:block;">
+                            <i class="bi bi-box-seam"></i> Package Name
+                        </label>
+                        <input type="text" id="packageName" class="admin-input" placeholder="e.g., Basic, Premium" required>
+                    </div>
+                    <div>
+                        <label style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:8px;display:block;">
+                            <i class="bi bi-hash"></i> Quantity
+                        </label>
+                        <input type="number" id="quantity" class="admin-input" placeholder="e.g., 1000" required>
+                    </div>
+                    <div>
+                        <label style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:8px;display:block;">
+                            <i class="bi bi-currency-dollar"></i> Price (Ks)
+                        </label>
+                        <input type="number" id="price" class="admin-input" placeholder="e.g., 1500" required>
+                    </div>
+                    <div style="display:flex;align-items:flex-end;">
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="bi bi-plus-circle"></i> Add Package
+                        </button>
+                    </div>
                 </form>
-                <table class="admin-table">
-                    <thead><tr><th>Service</th><th>Package</th><th>Quantity</th><th>Price</th><th>Actions</th></tr></thead>
-                    <tbody id="pricingTableBody"></tbody>
-                </table>
+                
+                <div class="admin-table-wrapper" style="margin-top:24px;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th><i class="bi bi-grid"></i> Service</th>
+                                <th><i class="bi bi-box-seam"></i> Package</th>
+                                <th><i class="bi bi-hash"></i> Quantity</th>
+                                <th><i class="bi bi-currency-dollar"></i> Price</th>
+                                <th><i class="bi bi-gear"></i> Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pricingTableBody"></tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Admin Settings -->
-            <div class="admin-card">
-                <h3><i class="bi bi-shield-lock"></i> Admin Settings</h3>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
-                    <div>
-                        <label style="color:var(--text-secondary);font-size:0.85rem;">Username</label>
-                        <div style="display:flex;gap:8px;">
-                            <input type="text" id="newUsername" class="admin-input" placeholder="New Username">
-                            <button class="btn-primary" style="padding:8px 15px;font-size:0.8rem;" onclick="updateUsername()">
+            <div class="admin-card fade-in fade-in-delay-2">
+                <h3><i class="bi bi-shield-lock-fill"></i> Admin Settings</h3>
+                <div class="admin-settings-grid">
+                    <div class="settings-group">
+                        <label><i class="bi bi-person-badge"></i> Change Username</label>
+                        <div class="settings-row">
+                            <input type="text" id="newUsername" class="admin-input" placeholder="New username">
+                            <button class="btn btn-secondary" onclick="updateUsername()">
                                 <i class="bi bi-pencil"></i> Update
                             </button>
                         </div>
                     </div>
-                    <div>
-                        <label style="color:var(--text-secondary);font-size:0.85rem;">Change Password</label>
-                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                            <input type="password" id="currentPassword" class="admin-input" placeholder="Current" style="flex:1;min-width:100px;">
-                            <input type="password" id="newPassword" class="admin-input" placeholder="New" style="flex:1;min-width:100px;">
-                            <button class="btn-primary" style="padding:8px 15px;font-size:0.8rem;" onclick="changePassword()">
-                                <i class="bi bi-key"></i> Change
+                    <div class="settings-group">
+                        <label><i class="bi bi-key-fill"></i> Change Password</label>
+                        <div class="settings-row" style="flex-direction:column;align-items:stretch;">
+                            <input type="password" id="currentPassword" class="admin-input" placeholder="Current password" style="margin-bottom:8px;">
+                            <input type="password" id="newPassword" class="admin-input" placeholder="New password" style="margin-bottom:8px;">
+                            <button class="btn btn-secondary btn-block" onclick="changePassword()">
+                                <i class="bi bi-key"></i> Change Password
                             </button>
                         </div>
                     </div>
@@ -118,6 +176,7 @@
         </div>
     </div>
 
+    <!-- Three.js Import Map -->
     <script type="importmap">
     {
         "imports": {
@@ -125,10 +184,51 @@
         }
     }
     </script>
+    
+    <!-- Three.js Background -->
     <script type="module">
         import { initFlameBackground } from './js/three-flames.js';
         initFlameBackground();
     </script>
+    
+    <!-- Admin JavaScript -->
     <script src="js/admin.js"></script>
+    
+    <!-- Scroll Animation Script -->
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('mainHeader');
+            if (header) {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            }
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>

@@ -4,74 +4,137 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact - SMM Pro</title>
+    <!-- Bootstrap Icons CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/pages.css">
 </head>
 <body>
     <div id="three-bg"></div>
 
-    <header class="header">
+    <!-- Header -->
+    <header class="header" id="mainHeader">
         <div class="header-content">
             <div class="logo">
-                <h1>SMM Pro</h1>
+                <h1 id="siteTitle">SMM Pro</h1>
                 <div class="subtitle-animation">Contact Us</div>
             </div>
-            <nav class="nav-menu">
-                <a href="main.html" class="nav-link">Home</a>
-                <a href="about.html" class="nav-link">About</a>
-                <a href="contact.html" class="nav-link active">Contact</a>
-                <a href="admin.html" class="btn-outline" style="padding: 8px 20px; font-size: 0.85rem;">
+            <nav class="nav-menu" id="navMenu">
+                <a href="main.html" class="nav-link">
+                    <i class="bi bi-house-door"></i> Home
+                </a>
+                <a href="main.html#pricing" class="nav-link">
+                    <i class="bi bi-tags"></i> Pricing
+                </a>
+                <a href="about.html" class="nav-link">
+                    <i class="bi bi-info-circle"></i> About
+                </a>
+                <a href="contact.html" class="nav-link active">
+                    <i class="bi bi-envelope"></i> Contact
+                </a>
+                <a href="admin.html" class="btn btn-sm btn-outline">
                     <i class="bi bi-shield-lock"></i> Admin
                 </a>
             </nav>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                <i class="bi bi-list"></i>
+            </button>
         </div>
     </header>
 
-    <main class="main-content" style="padding-top: 120px;">
-        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
-            <div class="glass" style="padding: 50px; text-align: center; margin-bottom: 40px;">
-                <h1 style="font-family: 'Orbitron', sans-serif; font-size: 3rem; margin-bottom: 20px;">
-                    <span class="gradient-text">Contact Us</span>
-                </h1>
-                <p style="font-size: 1.2rem; color: var(--text-secondary);">
-                    Reach out to us via Telegram for orders and support
+    <main class="main-content" style="padding-top: 100px;">
+        <div class="contact-section">
+            <!-- Hero Section -->
+            <div class="glass fade-in" style="text-align: center;">
+                <h1><span class="gradient-text">Contact Us</span></h1>
+                <p class="subtitle">
+                    Reach out to us via Telegram for orders and support. We're here to help you grow!
                 </p>
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
-                <div class="glass" style="padding: 40px; text-align: center;">
-                    <i class="bi bi-telegram" style="font-size: 4rem; color: #0088cc;"></i>
-                    <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1.3rem; margin: 20px 0;">Telegram Channel</h3>
-                    <p style="color: var(--text-secondary); margin-bottom: 20px;">Join our Telegram channel for orders and support</p>
-                    <a href="https://t.me/yourchannel" target="_blank" class="btn-primary" style="display: inline-block;">
+            <!-- Contact Cards -->
+            <div class="contact-grid">
+                <div class="contact-item glass fade-in fade-in-delay-1">
+                    <div class="icon-wrap">
+                        <i class="bi bi-telegram" style="color: #0088cc;"></i>
+                    </div>
+                    <h3>Telegram Channel</h3>
+                    <p>Join our Telegram channel for orders and support. Fast response guaranteed!</p>
+                    <a href="https://t.me/yourchannel" target="_blank" class="btn btn-primary">
                         <i class="bi bi-send"></i> Contact on Telegram
                     </a>
                 </div>
 
-                <div class="glass" style="padding: 40px; text-align: center;">
-                    <i class="bi bi-clock" style="font-size: 4rem; color: #FFD93D;"></i>
-                    <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1.3rem; margin: 20px 0;">24/7 Support</h3>
-                    <p style="color: var(--text-secondary);">Our team is available around the clock to assist you</p>
+                <div class="contact-item glass fade-in fade-in-delay-2">
+                    <div class="icon-wrap">
+                        <i class="bi bi-clock-fill" style="color: #FFD93D;"></i>
+                    </div>
+                    <h3>24/7 Support</h3>
+                    <p>Our team is available around the clock to assist you anytime you need help.</p>
+                    <span class="btn btn-secondary" style="pointer-events:none;">
+                        <i class="bi bi-check-circle"></i> Always Available
+                    </span>
+                </div>
+
+                <div class="contact-item glass fade-in fade-in-delay-3">
+                    <div class="icon-wrap">
+                        <i class="bi bi-lightning-charge-fill" style="color: #FF3366;"></i>
+                    </div>
+                    <h3>Quick Response</h3>
+                    <p>Get instant replies and fast order processing through our Telegram channel.</p>
+                    <span class="btn btn-secondary" style="pointer-events:none;">
+                        <i class="bi bi-stopwatch"></i> Fast Replies
+                    </span>
                 </div>
             </div>
 
-            <div class="glass" style="padding: 40px; margin-top: 30px; text-align: center;">
-                <h3 style="font-family: 'Orbitron', sans-serif; margin-bottom: 15px;">Quick Order Process</h3>
-                <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; color: var(--text-secondary);">
-                    <span><i class="bi bi-1-circle" style="color: #FF6B35;"></i> Choose Package</span>
-                    <span><i class="bi bi-2-circle" style="color: #FF6B35;"></i> Contact on Telegram</span>
-                    <span><i class="bi bi-3-circle" style="color: #FF6B35;"></i> Complete Payment</span>
-                    <span><i class="bi bi-4-circle" style="color: #FF6B35;"></i> Receive Service</span>
+            <!-- Quick Order Process -->
+            <div class="glass fade-in" style="padding: 50px; margin-top: 30px; text-align: center;">
+                <h2 style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 30px;">
+                    <i class="bi bi-arrow-right-circle" style="color: #FF6B35;"></i> Quick Order Process
+                </h2>
+                <div class="quick-process">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <span>Choose Package</span>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <span>Contact on Telegram</span>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <span>Complete Payment</span>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <span>Receive Service</span>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <a href="https://t.me/yourchannel" target="_blank" class="floating-telegram" id="telegramFloating">
-        <i class="bi bi-telegram" style="font-size: 28px; color: white;"></i>
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-logo"><span class="gradient-text">SMM Pro</span></div>
+        <p>&copy; 2024 SMM Pro. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="main.html"><i class="bi bi-house-door"></i> Home</a>
+            <a href="about.html"><i class="bi bi-info-circle"></i> About</a>
+            <a href="contact.html"><i class="bi bi-envelope"></i> Contact</a>
+            <a href="admin.html"><i class="bi bi-shield-lock"></i> Admin</a>
+        </div>
+    </footer>
+
+    <!-- Floating Telegram Button -->
+    <a href="https://t.me/yourchannel" target="_blank" class="floating-telegram" id="telegramFloating" aria-label="Contact on Telegram">
+        <i class="bi bi-telegram"></i>
     </a>
 
+    <!-- Three.js Import Map -->
     <script type="importmap">
     {
         "imports": {
@@ -79,10 +142,49 @@
         }
     }
     </script>
+    
+    <!-- Three.js Background -->
     <script type="module">
         import { initFlameBackground } from './js/three-flames.js';
         initFlameBackground();
     </script>
+    
+    <!-- Main JavaScript -->
     <script src="js/main.js"></script>
+    
+    <!-- Scroll Animation Script -->
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('mainHeader');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>

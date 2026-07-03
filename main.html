@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SMM Pro - Home</title>
+    <!-- Bootstrap Icons CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/pages.css">
@@ -12,52 +14,63 @@
 <body>
     <div id="three-bg"></div>
 
-    <header class="header">
+    <!-- Header -->
+    <header class="header" id="mainHeader">
         <div class="header-content">
             <div class="logo">
                 <h1 id="siteTitle">SMM Pro</h1>
                 <div class="subtitle-animation" id="headerSubtitle">Premium Social Media Marketing</div>
             </div>
-            <nav class="nav-menu">
-                <a href="main.html" class="nav-link active">Home</a>
-                <a href="#pricing" class="nav-link">Pricing</a>
-                <a href="about.html" class="nav-link">About</a>
-                <a href="contact.html" class="nav-link">Contact</a>
-                <a href="admin.html" class="btn-outline" style="padding: 6px 18px; font-size: 0.8rem;">
+            <nav class="nav-menu" id="navMenu">
+                <a href="main.html" class="nav-link active">
+                    <i class="bi bi-house-door"></i> Home
+                </a>
+                <a href="#pricing" class="nav-link">
+                    <i class="bi bi-tags"></i> Pricing
+                </a>
+                <a href="about.html" class="nav-link">
+                    <i class="bi bi-info-circle"></i> About
+                </a>
+                <a href="contact.html" class="nav-link">
+                    <i class="bi bi-envelope"></i> Contact
+                </a>
+                <a href="admin.html" class="btn btn-sm btn-outline">
                     <i class="bi bi-shield-lock"></i> Admin
                 </a>
             </nav>
-            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
                 <i class="bi bi-list"></i>
             </button>
         </div>
     </header>
 
     <main class="main-content">
-        <!-- Hero -->
+        <!-- Hero Section -->
         <section class="hero-section">
             <div>
                 <div class="hero-badge">
-                    <i class="bi bi-star-fill" style="color: #FFD93D;"></i>
+                    <i class="bi bi-star-fill"></i>
                     <span>#1 TikTok Growth Service</span>
                 </div>
                 <h1 class="hero-title">
-                    Grow Your <br><span class="gradient-text">TikTok Presence</span>
+                    Grow Your <br>
+                    <span class="gradient-text">TikTok Presence</span>
                 </h1>
                 <p class="hero-subtitle" id="heroSubtitle">
-                    Premium TikTok followers, views, and likes with instant delivery
+                    Premium TikTok followers, views, and likes with instant delivery. 
+                    Transform your social media presence today.
                 </p>
-                <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-                    <a href="#pricing" class="btn-primary">
-                        <i class="bi bi-rocket"></i> Get Started
+                <div class="hero-actions">
+                    <a href="#pricing" class="btn btn-primary btn-lg">
+                        <i class="bi bi-rocket-takeoff"></i> Get Started
                     </a>
-                    <a href="about.html" class="btn-outline">
-                        <i class="bi bi-info-circle"></i> Learn More
+                    <a href="about.html" class="btn btn-outline btn-lg">
+                        <i class="bi bi-lightbulb"></i> Learn More
                     </a>
                 </div>
                 <div class="hero-stats">
                     <div class="stat-item">
-                        <span class="stat-number">10K+</span>
+                        <span class="stat-number" data-count="10000">10K+</span>
                         <span class="stat-label">Orders Delivered</span>
                     </div>
                     <div class="stat-item">
@@ -72,118 +85,168 @@
             </div>
         </section>
 
-        <!-- Features -->
-        <section style="padding: 40px 20px; max-width: 1400px; margin: 0 auto;">
+        <!-- Features Section -->
+        <section style="padding: 60px 20px; max-width: 1400px; margin: 0 auto;">
             <h2 class="section-title">Why <span class="gradient-text">Choose Us</span></h2>
             <div class="features-grid">
-                <div class="feature-card glass">
-                    <i class="bi bi-lightning-charge-fill" style="color:#FF6B35;"></i>
+                <div class="feature-card glass fade-in fade-in-delay-1">
+                    <div class="icon-wrapper">
+                        <i class="bi bi-lightning-charge-fill" style="color:#FF6B35;"></i>
+                    </div>
                     <h3>Instant Delivery</h3>
-                    <p>Automated system delivers your order within minutes</p>
+                    <p>Automated system delivers your order within minutes. No waiting, just results.</p>
                 </div>
-                <div class="feature-card glass">
-                    <i class="bi bi-shield-check" style="color:#00ff88;"></i>
+                <div class="feature-card glass fade-in fade-in-delay-2">
+                    <div class="icon-wrapper">
+                        <i class="bi bi-shield-check" style="color:#00ff88;"></i>
+                    </div>
                     <h3>Secure & Safe</h3>
-                    <p>All transactions handled through our Telegram channel</p>
+                    <p>All transactions handled securely through our verified Telegram channel.</p>
                 </div>
-                <div class="feature-card glass">
-                    <i class="bi bi-people-fill" style="color:#FFD93D;"></i>
+                <div class="feature-card glass fade-in fade-in-delay-3">
+                    <div class="icon-wrapper">
+                        <i class="bi bi-people-fill" style="color:#FFD93D;"></i>
+                    </div>
                     <h3>Real Engagement</h3>
-                    <p>High-quality followers that look completely authentic</p>
+                    <p>High-quality followers that look completely authentic and engage naturally.</p>
                 </div>
-                <div class="feature-card glass">
-                    <i class="bi bi-graph-up-arrow" style="color:#FF3366;"></i>
+                <div class="feature-card glass fade-in fade-in-delay-4">
+                    <div class="icon-wrapper">
+                        <i class="bi bi-graph-up-arrow" style="color:#FF3366;"></i>
+                    </div>
                     <h3>Best Prices</h3>
-                    <p>Competitive pricing with the highest quality service</p>
+                    <p>Competitive pricing with the highest quality service in the market.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Pricing -->
+        <!-- Pricing Section -->
         <section class="pricing-section" id="pricing">
             <h2 class="section-title">Our <span class="gradient-text">Packages</span></h2>
             
             <div class="pricing-tabs">
                 <button class="pricing-tab active" data-type="all" onclick="filterPricing('all')">
-                    <i class="bi bi-grid"></i> All
+                    <i class="bi bi-grid-3x3-gap"></i> All
                 </button>
                 <button class="pricing-tab" data-type="followers" onclick="filterPricing('followers')">
-                    <i class="bi bi-people"></i> Followers
+                    <i class="bi bi-people-fill"></i> Followers
                 </button>
                 <button class="pricing-tab" data-type="views" onclick="filterPricing('views')">
-                    <i class="bi bi-eye"></i> Views
+                    <i class="bi bi-eye-fill"></i> Views
                 </button>
                 <button class="pricing-tab" data-type="likes" onclick="filterPricing('likes')">
-                    <i class="bi bi-heart"></i> Likes
+                    <i class="bi bi-heart-fill"></i> Likes
                 </button>
                 <button class="pricing-tab" data-type="comments" onclick="filterPricing('comments')">
-                    <i class="bi bi-chat"></i> Comments
+                    <i class="bi bi-chat-left-text-fill"></i> Comments
                 </button>
             </div>
 
             <div class="pricing-grid" id="pricingGrid">
-                <!-- Loaded via JS -->
+                <!-- Skeleton Loading -->
+                <div class="pricing-card skeleton" style="height: 280px;"></div>
+                <div class="pricing-card skeleton" style="height: 280px;"></div>
+                <div class="pricing-card skeleton" style="height: 280px;"></div>
+                <div class="pricing-card skeleton" style="height: 280px;"></div>
             </div>
         </section>
 
-        <!-- Testimonials -->
-        <section style="padding: 40px 20px; max-width: 1400px; margin: 0 auto;">
+        <!-- Testimonials Section -->
+        <section style="padding: 60px 20px; max-width: 1400px; margin: 0 auto;">
             <h2 class="section-title">What <span class="gradient-text">Clients Say</span></h2>
             <div class="testimonials-grid">
-                <div class="testimonial-card glass">
-                    <div class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
-                    <p>"Amazing service! My TikTok grew by 5000 followers in just 2 days!"</p>
+                <div class="testimonial-card glass fade-in fade-in-delay-1">
+                    <div class="stars">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <p>"Amazing service! My TikTok grew by 5000 followers in just 2 days. The delivery was super fast!"</p>
                     <div class="author">
                         <div class="avatar">JD</div>
-                        <div><div class="author-name">John Doe</div><div class="author-role">TikTok Creator</div></div>
+                        <div>
+                            <div class="author-name">John Doe</div>
+                            <div class="author-role">TikTok Creator</div>
+                        </div>
                     </div>
                 </div>
-                <div class="testimonial-card glass">
-                    <div class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
-                    <p>"100k views made my video go viral! Best investment ever!"</p>
+                <div class="testimonial-card glass fade-in fade-in-delay-2">
+                    <div class="stars">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <p>"100k views made my video go viral! Best investment ever for my content career."</p>
                     <div class="author">
                         <div class="avatar">SM</div>
-                        <div><div class="author-name">Sarah Miller</div><div class="author-role">Content Creator</div></div>
+                        <div>
+                            <div class="author-name">Sarah Miller</div>
+                            <div class="author-role">Content Creator</div>
+                        </div>
                     </div>
                 </div>
-                <div class="testimonial-card glass">
-                    <div class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
-                    <p>"Real followers, real engagement. This service is the best!"</p>
+                <div class="testimonial-card glass fade-in fade-in-delay-3">
+                    <div class="stars">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <p>"Real followers, real engagement. This service is the best in Myanmar market!"</p>
                     <div class="author">
                         <div class="avatar">AK</div>
-                        <div><div class="author-name">Alex Kim</div><div class="author-role">Influencer</div></div>
+                        <div>
+                            <div class="author-name">Alex Kim</div>
+                            <div class="author-role">Influencer</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- CTA -->
+        <!-- CTA Section -->
         <section class="cta-section" style="padding: 40px 20px; max-width: 1400px; margin: 0 auto;">
             <div class="glass">
                 <h2>Ready to <span class="gradient-text">Grow?</span></h2>
                 <p>Join thousands of satisfied customers and take your TikTok presence to the next level.</p>
-                <a href="#pricing" class="btn-primary" style="padding: 12px 35px;">
-                    <i class="bi bi-rocket"></i> Start Growing Now
+                <a href="#pricing" class="btn btn-primary btn-lg">
+                    <i class="bi bi-rocket-takeoff"></i> Start Growing Now
                 </a>
             </div>
         </section>
     </main>
 
+    <!-- Footer -->
     <footer class="site-footer">
         <div class="footer-logo"><span class="gradient-text">SMM Pro</span></div>
         <p>&copy; 2024 SMM Pro. All rights reserved.</p>
         <div class="footer-links">
-            <a href="main.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="contact.html">Contact</a>
-            <a href="admin.html">Admin</a>
+            <a href="main.html">
+                <i class="bi bi-house-door"></i> Home
+            </a>
+            <a href="about.html">
+                <i class="bi bi-info-circle"></i> About
+            </a>
+            <a href="contact.html">
+                <i class="bi bi-envelope"></i> Contact
+            </a>
+            <a href="admin.html">
+                <i class="bi bi-shield-lock"></i> Admin
+            </a>
         </div>
     </footer>
 
-    <a href="https://t.me/yourchannel" target="_blank" class="floating-telegram" id="telegramFloating">
+    <!-- Floating Telegram Button -->
+    <a href="https://t.me/yourchannel" target="_blank" class="floating-telegram" id="telegramFloating" aria-label="Contact on Telegram">
         <i class="bi bi-telegram"></i>
     </a>
 
+    <!-- Three.js Import Map -->
     <script type="importmap">
     {
         "imports": {
@@ -191,10 +254,49 @@
         }
     }
     </script>
+    
+    <!-- Three.js Background -->
     <script type="module">
         import { initFlameBackground } from './js/three-flames.js';
         initFlameBackground();
     </script>
+    
+    <!-- Main JavaScript -->
     <script src="js/main.js"></script>
+    
+    <!-- Scroll Animation Script -->
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('mainHeader');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>
