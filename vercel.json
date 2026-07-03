@@ -1,52 +1,30 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "server/neondb.py",
-      "use": "@vercel/python"
-    },
-    {
-      "src": "**/*",
-      "use": "static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "server/neondb.py"
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
+    "version": 2,
+    "builds": [
         {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
+            "src": "api/neondb.py",
+            "use": "@vercel/python",
+            "config": {
+                "maxLambdaSize": "15mb"
+            }
         }
-      ]
+    ],
+    "routes": [
+        {
+            "src": "/api/(.*)",
+            "dest": "api/neondb.py"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/$1"
+        }
+    ],
+    "env": {
+        "DB_HOST": "@db_host",
+        "DB_NAME": "@db_name",
+        "DB_USER": "@db_user",
+        "DB_PASSWORD": "@db_password",
+        "DB_PORT": "@db_port",
+        "SECRET_KEY": "@secret_key"
     }
-  ],
-  "env": {
-    "PYTHON_VERSION": "3.9"
-  }
 }

@@ -1,285 +1,118 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMM Service - Get Started</title>
-    <meta name="description" content="Boost your social media presence with our professional SMM services. Fast delivery, real engagement, 24/7 support.">
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    
-    <!-- Three.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    
-    <!-- Custom Styles -->
-    <link href="css/pages.css" rel="stylesheet">
+    <title>SMM Pro - Get Started</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/pages.css">
 </head>
 <body>
-    <!-- Three.js Canvas -->
-    <canvas id="bg-canvas"></canvas>
+    <div id="three-bg"></div>
 
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <a href="main.html" class="logo">SMM Service</a>
-            <div class="nav-links">
-                <a href="main.html">Home</a>
-                <a href="index.html" class="active">Get Started</a>
-                <a href="about.html">About</a>
-                <a href="contact.html">Contact</a>
-                <a href="admin.html">Admin</a>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1 id="siteTitle">SMM Pro</h1>
+                <div class="subtitle-animation" id="headerSubtitle">Get Started</div>
             </div>
+            <nav class="nav-menu">
+                <a href="main.html" class="nav-link">Home</a>
+                <a href="main.html#pricing" class="nav-link">Pricing</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="admin.html" class="btn-outline" style="padding: 6px 18px; font-size: 0.8rem;">
+                    <i class="bi bi-shield-lock"></i> Admin
+                </a>
+            </nav>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                <i class="bi bi-list"></i>
+            </button>
         </div>
-    </nav>
-
-    <!-- Page Header -->
-    <header class="page-header">
-        <h1 class="page-title">Get Started Today</h1>
-        <p class="page-subtitle">Follow these simple steps to boost your social media presence and grow your online brand</p>
     </header>
 
-    <!-- Steps Section -->
-    <section class="steps-section">
-        <div class="container">
-            <div class="steps-grid">
-                <div class="step-card">
-                    <div class="step-number">1</div>
-                    <h3 class="step-title">Choose a Service</h3>
-                    <p class="step-description">Browse our wide range of social media services and select the one that fits your needs</p>
+    <main class="main-content" style="padding-top: 100px;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+            <div class="glass" style="padding: 50px 40px; text-align: center;">
+                <div style="font-size: 4rem; margin-bottom: 20px;">
+                    <i class="bi bi-rocket-takeoff" style="color: #FF6B35;"></i>
                 </div>
-                <div class="step-card">
-                    <div class="step-number">2</div>
-                    <h3 class="step-title">Contact Us</h3>
-                    <p class="step-description">Reach out via Telegram with your order details and preferred service package</p>
+                <h1 style="font-family: 'Orbitron', sans-serif; font-size: 3rem; margin-bottom: 15px;">
+                    <span class="gradient-text">Get Started</span>
+                </h1>
+                <p style="font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 30px;">
+                    Grow your TikTok presence with our premium services. Choose a package and start growing today!
+                </p>
+                <a href="main.html#pricing" class="btn-primary" style="padding: 14px 40px; font-size: 1.1rem;">
+                    <i class="bi bi-arrow-right"></i> View Packages
+                </a>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; margin-top: 30px;">
+                <div class="glass" style="padding: 30px 20px; text-align: center;">
+                    <i class="bi bi-people" style="font-size: 2.5rem; color: #FF6B35;"></i>
+                    <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1rem; margin: 12px 0;">Followers</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Real followers starting from 1,500 Ks</p>
                 </div>
-                <div class="step-card">
-                    <div class="step-number">3</div>
-                    <h3 class="step-title">Make Payment</h3>
-                    <p class="step-description">Complete secure payment and receive confirmation within minutes</p>
+                <div class="glass" style="padding: 30px 20px; text-align: center;">
+                    <i class="bi bi-eye" style="font-size: 2.5rem; color: #00bfff;"></i>
+                    <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1rem; margin: 12px 0;">Views</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Video views starting from 800 Ks</p>
                 </div>
-                <div class="step-card">
-                    <div class="step-number">4</div>
-                    <h3 class="step-title">Watch Growth</h3>
-                    <p class="step-description">Sit back as we deliver your order. Watch your social media presence grow!</p>
+                <div class="glass" style="padding: 30px 20px; text-align: center;">
+                    <i class="bi bi-heart" style="font-size: 2.5rem; color: #FF3366;"></i>
+                    <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1rem; margin: 12px 0;">Likes</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Likes starting from 500 Ks</p>
+                </div>
+                <div class="glass" style="padding: 30px 20px; text-align: center;">
+                    <i class="bi bi-chat" style="font-size: 2.5rem; color: #00ff88;"></i>
+                    <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1rem; margin: 12px 0;">Comments</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Custom comments available</p>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Pricing Section -->
-    <section class="pricing-section">
-        <div class="container">
-            <h2 class="section-title">Our Packages</h2>
-            <p class="section-subtitle">Choose from our flexible pricing plans designed to meet every budget</p>
-            
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <h3 class="pricing-name">Starter</h3>
-                    <div class="pricing-price">$9.99</div>
-                    <p class="pricing-period">Perfect for beginners</p>
-                    <ul class="pricing-features">
-                        <li><i class="bi bi-check-circle-fill"></i> 500 Followers</li>
-                        <li><i class="bi bi-check-circle-fill"></i> 24-hour delivery</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Email support</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Secure payment</li>
-                    </ul>
-                    <button class="btn btn-primary buy-btn" data-service="Starter Package" data-price="9.99">
-                        Get Started
-                    </button>
-                </div>
-                
-                <div class="pricing-card popular">
-                    <h3 class="pricing-name">Professional</h3>
-                    <div class="pricing-price">$29.99</div>
-                    <p class="pricing-period">Most popular choice</p>
-                    <ul class="pricing-features">
-                        <li><i class="bi bi-check-circle-fill"></i> 2,500 Followers</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Fast delivery</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Priority support</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Money-back guarantee</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Bonus engagement</li>
-                    </ul>
-                    <button class="btn btn-primary buy-btn" data-service="Professional Package" data-price="29.99">
-                        Get Started
-                    </button>
-                </div>
-                
-                <div class="pricing-card featured">
-                    <h3 class="pricing-name">Business</h3>
-                    <div class="pricing-price">$99.99</div>
-                    <p class="pricing-period">For serious growth</p>
-                    <ul class="pricing-features">
-                        <li><i class="bi bi-check-circle-fill"></i> 10,000 Followers</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Instant delivery</li>
-                        <li><i class="bi bi-check-circle-fill"></i> 24/7 VIP support</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Full refund policy</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Premium engagement</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Monthly report</li>
-                    </ul>
-                    <button class="btn btn-primary buy-btn" data-service="Business Package" data-price="99.99">
-                        Get Started
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works Section -->
-    <section class="how-it-works">
-        <div class="container">
-            <h2 class="section-title">How It Works</h2>
-            <p class="section-subtitle">Our streamlined process makes growing your social media presence effortless</p>
-            
-            <div class="how-it-works-content">
-                <div class="how-step">
-                    <div class="how-step-number">1</div>
-                    <div class="how-step-content">
-                        <h3>Select Your Platform</h3>
-                        <p>Choose from Instagram, TikTok, YouTube, Twitter, Facebook, and more. We support all major social media platforms.</p>
-                    </div>
-                </div>
-                
-                <div class="how-step">
-                    <div class="how-step-number">2</div>
-                    <div class="how-step-content">
-                        <h3>Customize Your Order</h3>
-                        <p>Tell us your username, select the quantity, and any specific requirements. We'll tailor the service to your needs.</p>
-                    </div>
-                </div>
-                
-                <div class="how-step">
-                    <div class="how-step-number">3</div>
-                    <div class="how-step-content">
-                        <h3>Secure Payment</h3>
-                        <p>Make payment securely through our protected payment system. We accept various payment methods for your convenience.</p>
-                    </div>
-                </div>
-                
-                <div class="how-step">
-                    <div class="how-step-number">4</div>
-                    <div class="how-step-content">
-                        <h3>Fast Delivery</h3>
-                        <p>Watch your order being delivered in real-time. Most orders start within minutes and complete within 24-48 hours.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section class="faq-section">
-        <div class="container">
-            <h2 class="section-title">Frequently Asked Questions</h2>
-            <p class="section-subtitle">Got questions? We've got answers</p>
-            
-            <div class="faq-container">
-                <div class="faq-item">
-                    <button class="faq-question">
-                        Is it safe to use your services?
-                        <i class="bi bi-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            Yes, absolutely! Our services are designed with safety in mind. We use real, high-quality accounts and gradual delivery to ensure your account remains completely secure. We never ask for passwords or sensitive information.
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <button class="faq-question">
-                        How long does delivery take?
-                        <i class="bi bi-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            Delivery times vary based on the service and quantity ordered. Most orders start within minutes and complete within 24-72 hours. Large orders may take longer but we always deliver as fast as possible while maintaining quality.
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <button class="faq-question">
-                        What payment methods do you accept?
-                        <i class="bi bi-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            We accept various payment methods including bank transfer, mobile money, and cryptocurrency. Contact us via Telegram for the most convenient payment option for you.
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <button class="faq-question">
-                        Do you offer refunds?
-                        <i class="bi bi-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            Yes, we offer a money-back guarantee for orders that haven't been delivered. If we're unable to complete your order, you'll receive a full refund. Once delivery begins, we cannot process refunds as the service has been rendered.
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <button class="faq-question">
-                        Will my followers drop over time?
-                        <i class="bi bi-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            Our followers are high-quality and stable. While some natural fluctuation is normal on any social media platform, our retention rate is excellent (typically 90%+). We also offer refill guarantees for significant drops.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="container">
-            <div class="cta-content">
-                <h2 class="cta-title">Ready to Grow Your Social Media?</h2>
-                <p class="cta-text">Join thousands of satisfied customers and start building your online presence today</p>
-                <a href="#" class="btn btn-telegram telegram-link">
-                    <i class="bi bi-telegram"></i>
-                    Contact Us on Telegram
+            <div class="glass" style="padding: 40px; margin-top: 30px; text-align: center;">
+                <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1.2rem; margin-bottom: 15px;">
+                    <i class="bi bi-telegram" style="color: #0088cc;"></i> Order via Telegram
+                </h3>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                    Contact us on Telegram for orders and support
+                </p>
+                <a href="https://t.me/yourchannel" target="_blank" class="btn-primary" style="display: inline-flex; align-items: center; gap: 10px;">
+                    <i class="bi bi-send"></i> Contact on Telegram
                 </a>
             </div>
         </div>
-    </section>
+    </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-links">
-                <a href="main.html">Home</a>
-                <a href="index.html">Get Started</a>
-                <a href="about.html">About</a>
-                <a href="contact.html">Contact</a>
-                <a href="admin.html">Admin</a>
-            </div>
-            <p class="footer-copyright">© 2024 SMM Service. All rights reserved.</p>
+    <footer class="site-footer">
+        <div class="footer-logo"><span class="gradient-text">SMM Pro</span></div>
+        <p>&copy; 2024 SMM Pro. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="main.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="admin.html">Admin</a>
         </div>
     </footer>
 
-    <!-- Floating Telegram Button -->
-    <a href="#" class="floating-telegram telegram-link" aria-label="Contact on Telegram">
+    <a href="https://t.me/yourchannel" target="_blank" class="floating-telegram" id="telegramFloating">
         <i class="bi bi-telegram"></i>
     </a>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/pages.js"></script>
-    <script src="js/three-flames.js"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+        }
+    }
+    </script>
+    <script type="module">
+        import { initFlameBackground } from './js/three-flames.js';
+        initFlameBackground();
+    </script>
+    <script src="js/main.js"></script>
 </body>
 </html>

@@ -1,271 +1,134 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - SMM Services</title>
-    <link rel="stylesheet" href="css/admin.css">
+    <title>Admin Panel - SMM Pro</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
-    <div class="admin-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-logo">
-                <span>⚡</span> SMM Admin
-            </div>
-            <nav>
-                <ul class="sidebar-nav">
-                    <li>
-                        <a href="#" class="active" onclick="navigateTo('dashboard')">
-                            <span class="icon">📊</span>
-                            Dashboard
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" onclick="navigateTo('services')">
-                            <span class="icon">📦</span>
-                            Services
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" onclick="navigateTo('settings')">
-                            <span class="icon">⚙️</span>
-                            Settings
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" onclick="navigateTo('logs')">
-                            <span class="icon">📝</span>
-                            Website Logs
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" onclick="navigateTo('credentials')">
-                            <span class="icon">🔐</span>
-                            Credentials
-                        </a>
-                    </li>
-                    <li>
-                        <a href="index.html">
-                            <span class="icon">🚪</span>
-                            Back to Site
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
+    <div id="three-bg"></div>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Header -->
-            <header class="admin-header">
-                <h1>Dashboard</h1>
-                <div class="header-actions">
-                    <button class="btn btn-primary" onclick="openServiceModal()">
-                        <span>+</span> Add Service
-                    </button>
-                </div>
-            </header>
-
-            <!-- Dashboard Tab -->
-            <div id="dashboard" class="tab-content active">
-                <!-- Stats Grid -->
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">📦</div>
-                        <div class="stat-value" id="totalServices">0</div>
-                        <div class="stat-label">Total Services</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">👁️</div>
-                        <div class="stat-value" id="totalVisits" data-count="0">0</div>
-                        <div class="stat-label">Total Visits</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">📅</div>
-                        <div class="stat-value" id="todayVisits" data-count="0">0</div>
-                        <div class="stat-label">Today's Visits</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">📄</div>
-                        <div class="stat-value" id="uniquePages" data-count="0">0</div>
-                        <div class="stat-label">Unique Pages</div>
-                    </div>
-                </div>
-
-                <!-- Quick Actions -->
-                <div class="grid-2">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Quick Actions</h3>
-                        </div>
-                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                            <button class="btn btn-primary" onclick="navigateTo('services')">Manage Services</button>
-                            <button class="btn btn-secondary" onclick="navigateTo('logs')">View Logs</button>
-                            <button class="btn btn-secondary" onclick="navigateTo('settings')">Edit Settings</button>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Recent Activity</h3>
-                        </div>
-                        <div id="recentActivity">
-                            <p style="color: var(--text-secondary);">Loading recent activity...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Services Tab -->
-            <div id="services" class="tab-content">
-                <div class="card" style="margin-bottom: 25px;">
-                    <div class="card-header">
-                        <h3 class="card-title">Services Management</h3>
-                        <button class="btn btn-primary btn-sm" onclick="openServiceModal()">
-                            <span>+</span> Add New
-                        </button>
-                    </div>
-                    <div id="servicesList" class="grid-3" style="margin-top: 20px;">
-                        <!-- Services will be loaded here -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Settings Tab -->
-            <div id="settings" class="tab-content">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Website Settings</h3>
-                    </div>
-                    <form id="settingsForm">
-                        <div class="grid-2">
-                            <div class="form-group">
-                                <label>Website Title</label>
-                                <input type="text" name="title" placeholder="SMM Services" value="SMM Services">
-                            </div>
-                            <div class="form-group">
-                                <label>Subtitle</label>
-                                <input type="text" name="subtitle" placeholder="Your subtitle here" value="Premium Social Media Marketing">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Telegram Link</label>
-                            <input type="url" name="telegram" placeholder="https://t.me/yourchannel" value="">
-                        </div>
-                        <div class="form-group">
-                            <label>Slite Animation Text</label>
-                            <input type="text" name="sliteText" placeholder="Welcome to our SMM panel" value="Welcome to our SMM panel">
-                        </div>
-                        <div class="form-group">
-                            <label>Welcome Message</label>
-                            <textarea name="welcomeMessage" rows="4" placeholder="Enter your welcome message">Welcome to our premium SMM services platform. We provide high-quality social media marketing solutions.</textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">
-                            Save Settings
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Logs Tab -->
-            <div id="logs" class="tab-content">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Website Logs</h3>
-                        <div style="display: flex; gap: 10px;">
-                            <button class="btn btn-secondary btn-sm" onclick="exportLogs()">
-                                📥 Export
-                            </button>
-                            <button class="btn btn-danger btn-sm" onclick="clearLogs()">
-                                🗑️ Clear All
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Filter Bar -->
-                    <div class="filter-bar">
-                        <input type="text" id="logSearch" placeholder="Search logs...">
-                        <select id="pageFilter">
-                            <option value="">All Pages</option>
-                            <option value="/">Home</option>
-                            <option value="/about">About</option>
-                            <option value="/services">Services</option>
-                            <option value="/contact">Contact</option>
-                        </select>
-                    </div>
-
-                    <!-- Logs List -->
-                    <div id="logsList">
-                        <!-- Logs will be loaded here -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Credentials Tab -->
-            <div id="credentials" class="tab-content">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Admin Credentials</h3>
-                    </div>
-                    <form id="credentialsForm">
-                        <div class="form-group">
-                            <label>Username</label>
-                            <input type="text" name="username" placeholder="Enter username" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Current Password</label>
-                            <input type="password" name="currentPassword" placeholder="Enter current password" required>
-                        </div>
-                        <div class="form-group">
-                            <label>New Password</label>
-                            <input type="password" name="newPassword" placeholder="Enter new password" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Confirm New Password</label>
-                            <input type="password" name="confirmPassword" placeholder="Confirm new password" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">
-                            Update Credentials
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Service Modal -->
-    <div id="serviceModal" class="modal-overlay">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title" id="modalTitle">Add New Service</h3>
-                <button class="modal-close" onclick="closeServiceModal()">×</button>
-            </div>
-            <form id="serviceForm">
+    <!-- Login -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-box">
+            <h2><span class="gradient-text">SMM Pro</span></h2>
+            <p class="subtitle">Admin Panel</p>
+            <form class="login-form" id="loginForm" onsubmit="handleLogin(event)">
                 <div class="form-group">
-                    <label>Service Icon (Emoji)</label>
-                    <input type="text" name="icon" placeholder="📦" maxlength="2" required>
+                    <label><i class="bi bi-person"></i> Username</label>
+                    <input type="text" id="loginUsername" placeholder="Enter username" required>
                 </div>
                 <div class="form-group">
-                    <label>Service Name</label>
-                    <input type="text" name="name" placeholder="Instagram Followers" required>
+                    <label><i class="bi bi-lock"></i> Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter password" required>
                 </div>
-                <div class="form-group">
-                    <label>Price ($)</label>
-                    <input type="number" name="price" placeholder="9.99" step="0.01" min="0" required>
-                </div>
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea name="description" rows="3" placeholder="Describe the service..." required></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="closeServiceModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Service</button>
-                </div>
+                <button type="submit" class="btn-primary" style="width:100%;padding:12px;">
+                    <i class="bi bi-box-arrow-in-right"></i> Login
+                </button>
+                <div id="loginError"></div>
             </form>
         </div>
     </div>
 
+    <!-- Admin Panel -->
+    <div id="adminPanel" style="display:none;">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>SMM Pro</h1>
+                    <div class="subtitle-animation">Admin Panel</div>
+                </div>
+                <nav class="nav-menu">
+                    <span style="color:var(--text-secondary);font-size:0.85rem;">
+                        <i class="bi bi-person-circle"></i> <span id="adminUsername">Admin</span>
+                    </span>
+                    <button class="btn-outline" style="padding:4px 16px;font-size:0.8rem;" onclick="handleLogout()">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <div class="admin-panel">
+            <!-- Settings -->
+            <div class="admin-card">
+                <h3><i class="bi bi-gear"></i> Site Settings</h3>
+                <form id="settingsForm" onsubmit="updateSettings(event)" style="display:grid;gap:12px;">
+                    <input type="text" id="siteTitle" class="admin-input" placeholder="Site Title">
+                    <input type="text" id="siteSubtitle" class="admin-input" placeholder="Subtitle Text">
+                    <input type="url" id="telegramLink" class="admin-input" placeholder="Telegram Link">
+                    <button type="submit" class="btn-primary" style="padding:8px 25px;width:fit-content;">
+                        <i class="bi bi-save"></i> Save Settings
+                    </button>
+                </form>
+            </div>
+
+            <!-- Pricing -->
+            <div class="admin-card">
+                <h3><i class="bi bi-tags"></i> Pricing Management</h3>
+                <form id="addPricingForm" onsubmit="addPackage(event)" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:15px;">
+                    <select id="serviceType" class="admin-input" required>
+                        <option value="followers">Followers</option>
+                        <option value="views">Views</option>
+                        <option value="likes">Likes</option>
+                        <option value="comments">Comments</option>
+                    </select>
+                    <input type="text" id="packageName" class="admin-input" placeholder="Package Name" required>
+                    <input type="number" id="quantity" class="admin-input" placeholder="Quantity" required>
+                    <input type="number" id="price" class="admin-input" placeholder="Price (Ks)" required>
+                    <button type="submit" class="btn-primary" style="padding:8px;">
+                        <i class="bi bi-plus-circle"></i> Add
+                    </button>
+                </form>
+                <table class="admin-table">
+                    <thead><tr><th>Service</th><th>Package</th><th>Quantity</th><th>Price</th><th>Actions</th></tr></thead>
+                    <tbody id="pricingTableBody"></tbody>
+                </table>
+            </div>
+
+            <!-- Admin Settings -->
+            <div class="admin-card">
+                <h3><i class="bi bi-shield-lock"></i> Admin Settings</h3>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+                    <div>
+                        <label style="color:var(--text-secondary);font-size:0.85rem;">Username</label>
+                        <div style="display:flex;gap:8px;">
+                            <input type="text" id="newUsername" class="admin-input" placeholder="New Username">
+                            <button class="btn-primary" style="padding:8px 15px;font-size:0.8rem;" onclick="updateUsername()">
+                                <i class="bi bi-pencil"></i> Update
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label style="color:var(--text-secondary);font-size:0.85rem;">Change Password</label>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                            <input type="password" id="currentPassword" class="admin-input" placeholder="Current" style="flex:1;min-width:100px;">
+                            <input type="password" id="newPassword" class="admin-input" placeholder="New" style="flex:1;min-width:100px;">
+                            <button class="btn-primary" style="padding:8px 15px;font-size:0.8rem;" onclick="changePassword()">
+                                <i class="bi bi-key"></i> Change
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+        }
+    }
+    </script>
+    <script type="module">
+        import { initFlameBackground } from './js/three-flames.js';
+        initFlameBackground();
+    </script>
     <script src="js/admin.js"></script>
 </body>
 </html>

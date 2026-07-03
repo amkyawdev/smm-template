@@ -1,262 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - SMM Service</title>
-    <meta name="description" content="Get in touch with SMM Service. Contact us for support, inquiries, or to place an order via Telegram.">
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    
-    <!-- Three.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    
-    <!-- Custom Styles -->
-    <link href="css/pages.css" rel="stylesheet">
+    <title>Contact - SMM Pro</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- Three.js Canvas -->
-    <canvas id="bg-canvas"></canvas>
+    <div id="three-bg"></div>
 
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <a href="main.html" class="logo">SMM Service</a>
-            <div class="nav-links">
-                <a href="main.html">Home</a>
-                <a href="index.html">Get Started</a>
-                <a href="about.html">About</a>
-                <a href="contact.html" class="active">Contact</a>
-                <a href="admin.html">Admin</a>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>SMM Pro</h1>
+                <div class="subtitle-animation">Contact Us</div>
             </div>
+            <nav class="nav-menu">
+                <a href="main.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link active">Contact</a>
+                <a href="admin.html" class="btn-outline" style="padding: 8px 20px; font-size: 0.85rem;">
+                    <i class="bi bi-shield-lock"></i> Admin
+                </a>
+            </nav>
         </div>
-    </nav>
-
-    <!-- Page Header -->
-    <header class="page-header">
-        <h1 class="page-title">Contact Us</h1>
-        <p class="page-subtitle">We'd love to hear from you. Reach out anytime!</p>
     </header>
 
-    <!-- Contact Section -->
-    <section class="contact-section">
-        <div class="container">
-            <div class="contact-grid">
-                <!-- Contact Info -->
-                <div class="contact-info">
-                    <h2 class="form-title">Get in Touch</h2>
-                    <p style="color: var(--gray-400); margin-bottom: 2rem;">
-                        Have questions? Need help placing an order? We're here for you. 
-                        Contact us through any of the channels below and we'll get back to you as soon as possible.
-                    </p>
-                    
-                    <div class="contact-info-card">
-                        <div class="contact-info-icon">
-                            <i class="bi bi-telegram"></i>
-                        </div>
-                        <div class="contact-info-content">
-                            <h4>Telegram</h4>
-                            <p>
-                                <a href="#" class="telegram-link">@YourTelegramChannel</a>
-                            </p>
-                            <small style="color: var(--gray-500);">Fastest response time</small>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-info-card">
-                        <div class="contact-info-icon">
-                            <i class="bi bi-envelope"></i>
-                        </div>
-                        <div class="contact-info-content">
-                            <h4>Email</h4>
-                            <p><a href="mailto:support@smmservice.com">support@smmservice.com</a></p>
-                            <small style="color: var(--gray-500);">Response within 24 hours</small>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-info-card">
-                        <div class="contact-info-icon">
-                            <i class="bi bi-clock"></i>
-                        </div>
-                        <div class="contact-info-content">
-                            <h4>Working Hours</h4>
-                            <p>24/7 Available</p>
-                            <small style="color: var(--gray-500);">Always here to help</small>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-info-card">
-                        <div class="contact-info-icon">
-                            <i class="bi bi-geo-alt"></i>
-                        </div>
-                        <div class="contact-info-content">
-                            <h4>Location</h4>
-                            <p>Global Service</p>
-                            <small style="color: var(--gray-500);">Serving customers worldwide</small>
-                        </div>
-                    </div>
+    <main class="main-content" style="padding-top: 120px;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+            <div class="glass" style="padding: 50px; text-align: center; margin-bottom: 40px;">
+                <h1 style="font-family: 'Orbitron', sans-serif; font-size: 3rem; margin-bottom: 20px;">
+                    <span class="gradient-text">Contact Us</span>
+                </h1>
+                <p style="font-size: 1.2rem; color: var(--text-secondary);">
+                    Reach out to us via Telegram for orders and support
+                </p>
+            </div>
 
-                    <!-- Social Links -->
-                    <div class="social-links">
-                        <a href="#" class="social-link telegram-link" aria-label="Telegram">
-                            <i class="bi bi-telegram"></i>
-                        </a>
-                        <a href="#" class="social-link" aria-label="Instagram">
-                            <i class="bi bi-instagram"></i>
-                        </a>
-                        <a href="#" class="social-link" aria-label="Twitter">
-                            <i class="bi bi-twitter"></i>
-                        </a>
-                        <a href="#" class="social-link" aria-label="Facebook">
-                            <i class="bi bi-facebook"></i>
-                        </a>
-                    </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <div class="glass" style="padding: 40px; text-align: center;">
+                    <i class="bi bi-telegram" style="font-size: 4rem; color: #0088cc;"></i>
+                    <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1.3rem; margin: 20px 0;">Telegram Channel</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 20px;">Join our Telegram channel for orders and support</p>
+                    <a href="https://t.me/yourchannel" target="_blank" class="btn-primary" style="display: inline-block;">
+                        <i class="bi bi-send"></i> Contact on Telegram
+                    </a>
                 </div>
 
-                <!-- Contact Form -->
-                <div class="contact-form">
-                    <h2 class="form-title">Send Us a Message</h2>
-                    <form id="contact-form">
-                        <div class="form-group">
-                            <label for="name">Your Name *</label>
-                            <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="email">Email Address *</label>
-                            <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="subject">Subject</label>
-                            <input type="text" id="subject" name="subject" class="form-control" placeholder="What is this about?">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="message">Message *</label>
-                            <textarea id="message" name="message" class="form-control" placeholder="Tell us how we can help you..." required></textarea>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary btn-block">
-                            <i class="bi bi-send"></i>
-                            Send Message
-                        </button>
-                    </form>
-                    
-                    <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--glass-border);">
-                        <p style="color: var(--gray-400); margin-bottom: 1rem;">Prefer instant messaging?</p>
-                        <a href="#" class="btn btn-telegram telegram-link">
-                            <i class="bi bi-telegram"></i>
-                            Chat on Telegram
-                        </a>
-                    </div>
+                <div class="glass" style="padding: 40px; text-align: center;">
+                    <i class="bi bi-clock" style="font-size: 4rem; color: #FFD93D;"></i>
+                    <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1.3rem; margin: 20px 0;">24/7 Support</h3>
+                    <p style="color: var(--text-secondary);">Our team is available around the clock to assist you</p>
+                </div>
+            </div>
+
+            <div class="glass" style="padding: 40px; margin-top: 30px; text-align: center;">
+                <h3 style="font-family: 'Orbitron', sans-serif; margin-bottom: 15px;">Quick Order Process</h3>
+                <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; color: var(--text-secondary);">
+                    <span><i class="bi bi-1-circle" style="color: #FF6B35;"></i> Choose Package</span>
+                    <span><i class="bi bi-2-circle" style="color: #FF6B35;"></i> Contact on Telegram</span>
+                    <span><i class="bi bi-3-circle" style="color: #FF6B35;"></i> Complete Payment</span>
+                    <span><i class="bi bi-4-circle" style="color: #FF6B35;"></i> Receive Service</span>
                 </div>
             </div>
         </div>
-    </section>
+    </main>
 
-    <!-- FAQ Preview -->
-    <section class="faq-section" style="background: var(--glass-bg);">
-        <div class="container">
-            <h2 class="section-title">Common Questions</h2>
-            <p class="section-subtitle">Quick answers to frequently asked questions</p>
-            
-            <div class="faq-container">
-                <div class="faq-item">
-                    <button class="faq-question">
-                        How do I place an order?
-                        <i class="bi bi-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            Simply contact us via Telegram with your order details (service type, quantity, username/platform). We'll provide you with a quote and payment instructions. Once payment is confirmed, your order will begin processing immediately.
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <button class="faq-question">
-                        What payment methods do you accept?
-                        <i class="bi bi-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            We accept various payment methods including bank transfer, mobile money, and cryptocurrency. Contact us via Telegram for the most convenient option for your location.
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <button class="faq-question">
-                        How long does delivery take?
-                        <i class="bi bi-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            Most orders start within minutes and complete within 24-72 hours. Delivery speed depends on the service size and current queue. Large orders may take longer but we'll always deliver as fast as possible.
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <button class="faq-question">
-                        Is your service safe?
-                        <i class="bi bi-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            Yes! We never ask for passwords and our services use real, high-quality accounts. We use gradual delivery methods to ensure your account remains completely safe and secure.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="container">
-            <div class="cta-content">
-                <h2 class="cta-title">Need Immediate Help?</h2>
-                <p class="cta-text">For the fastest support, reach out to us directly on Telegram. We're available 24/7!</p>
-                <a href="#" class="btn btn-telegram telegram-link">
-                    <i class="bi bi-telegram"></i>
-                    Open Telegram Chat
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-links">
-                <a href="main.html">Home</a>
-                <a href="index.html">Get Started</a>
-                <a href="about.html">About</a>
-                <a href="contact.html">Contact</a>
-                <a href="admin.html">Admin</a>
-            </div>
-            <p class="footer-copyright">© 2024 SMM Service. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <!-- Floating Telegram Button -->
-    <a href="#" class="floating-telegram telegram-link" aria-label="Contact on Telegram">
-        <i class="bi bi-telegram"></i>
+    <a href="https://t.me/yourchannel" target="_blank" class="floating-telegram" id="telegramFloating">
+        <i class="bi bi-telegram" style="font-size: 28px; color: white;"></i>
     </a>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/pages.js"></script>
-    <script src="js/three-flames.js"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+        }
+    }
+    </script>
+    <script type="module">
+        import { initFlameBackground } from './js/three-flames.js';
+        initFlameBackground();
+    </script>
+    <script src="js/main.js"></script>
 </body>
 </html>

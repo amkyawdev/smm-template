@@ -1,0 +1,53 @@
+-- Create tables for the SMM Service Website
+
+-- Site Settings Table
+CREATE TABLE site_settings (
+    id SERIAL PRIMARY KEY,
+    site_title VARCHAR(255) DEFAULT 'SMM Service',
+    subtitle_text VARCHAR(500) DEFAULT 'Premium Social Media Marketing',
+    telegram_link VARCHAR(500) DEFAULT 'https://t.me/yourchannel',
+    floating_icon_enabled BOOLEAN DEFAULT TRUE,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Admin Users Table
+CREATE TABLE admin_users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Pricing Table
+CREATE TABLE pricing (
+    id SERIAL PRIMARY KEY,
+    service_type VARCHAR(50) NOT NULL, -- 'followers', 'views', 'likes', 'comments'
+    package_name VARCHAR(100) NOT NULL,
+    quantity INTEGER NOT NULL,
+    price_kyat DECIMAL(10,2) NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Demo Data
+INSERT INTO site_settings (site_title, subtitle_text, telegram_link) 
+VALUES ('SMM Pro', 'Premium Social Media Marketing Services', 'https://t.me/smmprochannel');
+
+INSERT INTO admin_users (username, password_hash) 
+VALUES ('admin', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewYnpGriBqNcHxU2'); -- password: admin123
+
+INSERT INTO pricing (service_type, package_name, quantity, price_kyat) VALUES
+('followers', 'Starter', 100, 1500),
+('followers', 'Growth', 500, 6500),
+('followers', 'Pro', 1000, 12000),
+('followers', 'Elite', 5000, 55000),
+('views', 'Basic', 1000, 800),
+('views', 'Popular', 5000, 3500),
+('views', 'Viral', 10000, 6500),
+('views', 'Mega', 50000, 28000),
+('likes', 'Starter', 50, 500),
+('likes', 'Growth', 200, 1800),
+('likes', 'Pro', 500, 4000),
+('likes', 'Elite', 2000, 15000);
