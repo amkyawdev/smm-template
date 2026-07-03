@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMM Service - Home</title>
+    <meta name="description" content="Professional social media marketing services. Boost your Instagram, TikTok, YouTube, and more with instant delivery and 24/7 support.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Custom Styles -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Three.js Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="main.html" class="logo">SMM Service</a>
+            <div class="nav-links">
+                <a href="main.html" class="active">Home</a>
+                <a href="index.html">Get Started</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+                <a href="admin.html">Admin</a>
+            </div>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">🚀 #1 SMM Service Provider</div>
+            <h1 class="hero-title">
+                Boost Your <span>Social Media</span> Presence Today
+            </h1>
+            <p class="hero-subtitle">
+                Instant delivery, real engagement, and 24/7 customer support. 
+                Grow your Instagram, TikTok, YouTube, and more with our proven services.
+            </p>
+            <div class="hero-buttons">
+                <a href="#" class="btn btn-primary telegram-link">
+                    <i class="bi bi-telegram"></i>
+                    Get Started
+                </a>
+                <a href="#services" class="btn btn-secondary">
+                    <i class="bi bi-grid"></i>
+                    View Services
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-number" data-target="50000">0</div>
+                <div class="stat-label">Orders Completed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="98">0</div>
+                <div class="stat-label">% Satisfaction</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="24">0</div>
+                <div class="stat-label">/7 Support</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="50">0</div>
+                <div class="stat-label">Services Available</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="section-header">
+            <h2 class="section-title">Our Services</h2>
+            <p class="section-subtitle">Choose from our wide range of social media marketing services</p>
+        </div>
+        
+        <div id="services-grid" class="services-grid">
+            <!-- Services will be loaded dynamically -->
+            <div class="service-card">
+                <span class="service-badge">Popular</span>
+                <div class="service-icon">
+                    <i class="bi bi-instagram"></i>
+                </div>
+                <h3 class="service-title">Instagram Followers</h3>
+                <div class="service-price">$9.99<span>/order</span></div>
+                <p class="service-description">High-quality Instagram followers for your profile</p>
+                <ul class="service-features">
+                    <li><i class="bi bi-check-circle-fill"></i> Real profiles</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Fast delivery</li>
+                    <li><i class="bi bi-check-circle-fill"></i> 24/7 support</li>
+                </ul>
+                <button class="btn btn-primary buy-btn" data-service="Instagram Followers" data-price="9.99">
+                    Buy Now
+                </button>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="bi bi-tiktok"></i>
+                </div>
+                <h3 class="service-title">TikTok Views</h3>
+                <div class="service-price">$4.99<span>/order</span></div>
+                <p class="service-description">Boost your TikTok video views instantly</p>
+                <ul class="service-features">
+                    <li><i class="bi bi-check-circle-fill"></i> Instant start</li>
+                    <li><i class="bi bi-check-circle-fill"></i> High retention</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Safe & secure</li>
+                </ul>
+                <button class="btn btn-primary buy-btn" data-service="TikTok Views" data-price="4.99">
+                    Buy Now
+                </button>
+            </div>
+            
+            <div class="service-card">
+                <span class="service-badge">Best</span>
+                <div class="service-icon">
+                    <i class="bi bi-youtube"></i>
+                </div>
+                <h3 class="service-title">YouTube Subscribers</h3>
+                <div class="service-price">$19.99<span>/order</span></div>
+                <p class="service-description">Grow your YouTube channel with real subscribers</p>
+                <ul class="service-features">
+                    <li><i class="bi bi-check-circle-fill"></i> Real users</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Gradual delivery</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Money-back guarantee</li>
+                </ul>
+                <button class="btn btn-primary buy-btn" data-service="YouTube Subscribers" data-price="19.99">
+                    Buy Now
+                </button>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="bi bi-twitter"></i>
+                </div>
+                <h3 class="service-title">Twitter Followers</h3>
+                <div class="service-price">$7.99<span>/order</span></div>
+                <p class="service-description">Increase your Twitter presence and reach</p>
+                <ul class="service-features">
+                    <li><i class="bi bi-check-circle-fill"></i> Quality accounts</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Drop protection</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Instant delivery</li>
+                </ul>
+                <button class="btn btn-primary buy-btn" data-service="Twitter Followers" data-price="7.99">
+                    Buy Now
+                </button>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="bi bi-facebook"></i>
+                </div>
+                <h3 class="service-title">Facebook Likes</h3>
+                <div class="service-price">$5.99<span>/order</span></div>
+                <p class="service-description">Get more engagement on your Facebook posts</p>
+                <ul class="service-features">
+                    <li><i class="bi bi-check-circle-fill"></i> Real likes</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Fast delivery</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Secure payment</li>
+                </ul>
+                <button class="btn btn-primary buy-btn" data-service="Facebook Likes" data-price="5.99">
+                    Buy Now
+                </button>
+            </div>
+            
+            <div class="service-card">
+                <span class="service-badge">Hot</span>
+                <div class="service-icon">
+                    <i class="bi bi-telegram"></i>
+                </div>
+                <h3 class="service-title">Telegram Members</h3>
+                <div class="service-price">$8.99<span>/order</span></div>
+                <p class="service-description">Grow your Telegram group or channel</p>
+                <ul class="service-features">
+                    <li><i class="bi bi-check-circle-fill"></i> Active members</li>
+                    <li><i class="bi bi-check-circle-fill"></i> No bots</li>
+                    <li><i class="bi bi-check-circle-fill"></i> 24/7 support</li>
+                </ul>
+                <button class="btn btn-primary buy-btn" data-service="Telegram Members" data-price="8.99">
+                    Buy Now
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section class="why-us">
+        <div class="section-header">
+            <h2 class="section-title">Why Choose Us</h2>
+            <p class="section-subtitle">We're the trusted choice for social media growth</p>
+        </div>
+        
+        <div class="why-us-grid">
+            <div class="why-us-item">
+                <div class="why-us-icon">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                </div>
+                <h3 class="why-us-title">Instant Delivery</h3>
+                <p class="why-us-text">Most orders start within minutes. Watch your metrics grow in real-time.</p>
+            </div>
+            
+            <div class="why-us-item">
+                <div class="why-us-icon">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+                <h3 class="why-us-title">100% Safe</h3>
+                <p class="why-us-text">We never ask for passwords. Your account security is our top priority.</p>
+            </div>
+            
+            <div class="why-us-item">
+                <div class="why-us-icon">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <h3 class="why-us-title">Real Engagement</h3>
+                <p class="why-us-text">Quality followers and engagement from real accounts, not bots.</p>
+            </div>
+            
+            <div class="why-us-item">
+                <div class="why-us-icon">
+                    <i class="bi bi-headset"></i>
+                </div>
+                <h3 class="why-us-title">24/7 Support</h3>
+                <p class="why-us-text">Our team is always available to help you via Telegram anytime.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="section-header">
+            <h2 class="section-title">What Our Clients Say</h2>
+            <p class="section-subtitle">Join thousands of satisfied customers worldwide</p>
+        </div>
+        
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-stars">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                </div>
+                <p class="testimonial-content">
+                    "Absolutely amazing service! My Instagram grew from 1K to 10K followers in just two weeks. The delivery was fast and the support team was incredibly helpful."
+                </p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">JD</div>
+                    <div class="author-info">
+                        <h4>John Doe</h4>
+                        <p>Content Creator</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="testimonial-card">
+                <div class="testimonial-stars">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                </div>
+                <p class="testimonial-content">
+                    "I've tried many SMM services before, but this is by far the best. Real engagement, no drops, and excellent customer service. Highly recommend!"
+                </p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">SM</div>
+                    <div class="author-info">
+                        <h4>Sarah Miller</h4>
+                        <p>Business Owner</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="testimonial-card">
+                <div class="testimonial-stars">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                </div>
+                <p class="testimonial-content">
+                    "My YouTube channel needed that initial boost to get discovered. Thanks to this service, I'm now at 50K subscribers and growing organically!"
+                </p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">MK</div>
+                    <div class="author-info">
+                        <h4>Mike King</h4>
+                        <p>YouTuber</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div>
+                <h3>SMM Service</h3>
+                <p style="color: var(--gray-400); margin-top: 0.5rem;">
+                    Your trusted partner for social media growth
+                </p>
+            </div>
+            <div class="footer-social">
+                <a href="#" aria-label="Telegram"><i class="bi bi-telegram"></i></a>
+                <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                <a href="#" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 SMM Service. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Floating Telegram Button -->
+    <a href="#" class="floating-telegram telegram-link" aria-label="Contact on Telegram">
+        <i class="bi bi-telegram"></i>
+    </a>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
