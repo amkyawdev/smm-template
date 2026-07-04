@@ -333,4 +333,4 @@ export function initFlameBackground() {
             container.removeChild(renderer.domElement);
         }
     };
-                         }
+}
